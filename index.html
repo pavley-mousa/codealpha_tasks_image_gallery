@@ -126,6 +126,7 @@
       <div class="lightbox-media-wrap">
         <img id="lightbox-image" src="" alt="" />
         <video id="lightbox-video" controls playsinline preload="metadata" hidden></video>
+        <iframe id="lightbox-embed" title="Instagram post" hidden loading="eager" allowtransparency="true" scrolling="no" frameborder="0"></iframe>
       </div>
       <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Next">›</button>
       <div class="lightbox-info">
@@ -277,6 +278,10 @@
           <label class="full">
             <span data-i18n="postLink">Link</span>
             <input id="manual-link-input" type="url" placeholder="https://instagram.com/..." />
+          </label>
+          <label class="full">
+            <span data-i18n="instagramPostUrl">Instagram post URL (optional)</span>
+            <input id="manual-instagram-input" type="url" placeholder="https://www.instagram.com/p/..." />
           </label>
           <label class="full">
             <span data-i18n="imageAlt">Alt text</span>

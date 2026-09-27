@@ -445,6 +445,14 @@ function getInstagramTitle(url) {
   return token ? "Instagram • " + token : "Instagram post";
 }
 
+function getInstagramType(url) {
+  const normalized = normalizeInstagramPostUrl(url);
+  if (!normalized) return "image";
+
+  const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
+  return pathParts[0] === "reel" || pathParts[0] === "tv" ? "reel" : "image";
+}
+
 async function handleManualFile(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
@@ -516,7 +524,7 @@ function saveManualItem() {
     caption: "",
     hashtags: [],
     timestamp: previous && previous.timestamp ? previous.timestamp : new Date().toISOString(),
-    type: "image"
+    type: instagramUrl ? getInstagramType(instagramUrl) : "image"
   };
 
   const existingIndex = manualItems.findIndex(function(entry) { return entry.id === item.id; });
@@ -822,8 +830,12 @@ function updateLightbox() {
   ].filter(Boolean).join(" • ");
 
   const link = $("#lightbox-link");
-  link.href = item.link && item.link !== "#" ? item.link : "#";
-  link.style.display = item.link && item.link !== "#" ? "inline-flex" : "none";
+  const hasExternalLink = item.link && item.link !== "#";
+  link.href = hasExternalLink ? item.link : "#";
+  link.textContent = item.source === "instagram" || item.instagramUrl
+    ? t("openInstagram")
+    : (settings.language === "ar" ? "فتح العنصر" : "Open item");
+  link.style.display = hasExternalLink ? "inline-flex" : "none";
 }
 
 function showNext() {

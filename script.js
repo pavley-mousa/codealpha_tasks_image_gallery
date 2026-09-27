@@ -1,4 +1,5 @@
 const STORAGE_KEY = "codealpha_image_gallery_v2";
+const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/";
 
 const DEFAULT_SETTINGS = {
   instagramUsername: "pavley_mousa",
@@ -295,8 +296,13 @@ function applySettings() {
   $("#app-subtitle").textContent = settings.subtitle;
 
   const username = (settings.instagramUsername || "pavley_mousa").replace(/^@+/, "");
+  const profileUrl = `${INSTAGRAM_PROFILE_URL}${encodeURIComponent(username)}/`;
+  const profileEmbed = `${profileUrl}embed/`;
+  $("#instagram-profile-embed-title").textContent = `@${username}`;
+  $("#instagram-profile-embed-link").href = profileUrl;
+  $("#instagram-profile-embed").src = profileEmbed;
   $("#profile-name").textContent = `@${username}`;
-  $("#instagram-profile-btn").href = `https://www.instagram.com/${encodeURIComponent(username)}/`;
+  $("#instagram-profile-btn").href = profileUrl;
   $("#hero-title").textContent = settings.heroTitle;
   $("#hero-description").textContent = settings.heroDescription;
   $("#footer-text").textContent = settings.footerText;

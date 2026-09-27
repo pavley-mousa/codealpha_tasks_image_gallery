@@ -705,8 +705,8 @@ function saveManualItem() {
   const title = $("#manual-title-input").value.trim();
   const category = $("#manual-category-input").value.trim();
   const image = $("#manual-image-input").value.trim() || $("#manual-file-input").dataset.dataUrl || "";
-  const link = $("#manual-link-input").value.trim() || "#";
   const instagramUrl = normalizeInstagramPostUrl($("#manual-instagram-input").value.trim());
+  const link = $("#manual-link-input").value.trim() || instagramUrl || "#";
   const alt = $("#manual-alt-input").value.trim() || title;
   const existingId = $("#manual-id-input").value;
 

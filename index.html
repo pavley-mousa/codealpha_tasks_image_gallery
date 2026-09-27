@@ -51,7 +51,7 @@
         <div>
           <span class="badge" id="sync-badge">AUTO SYNC</span>
           <h2 id="hero-title">Latest Instagram posts</h2>
-          <p id="hero-description">New posts appear here automatically when your connected feed refreshes.</p>
+          <p id="hero-description">Posts load from your connected feed when you press Refresh.</p>
         </div>
         <button class="primary-btn" id="refresh-btn" type="button">
           <span>↻</span>
@@ -152,7 +152,7 @@
       <div class="settings-grid">
         <section class="settings-section">
           <h3 data-i18n="instagramConnection">Instagram Connection</h3>
-          <p class="muted" data-i18n="instagramHelp">Create a Behold JSON feed for your Instagram account, then paste the feed URL here.</p>
+          <p class="muted" data-i18n="instagramHelp">Create a Behold JSON feed for your Instagram account, then paste the feed URL here. Use Refresh when you want to load the latest posts.</p>
           <label>
             <span data-i18n="instagramUsername">Instagram username</span>
             <input id="instagram-username-input" type="text" maxlength="60" placeholder="@pavley_mousa" />
@@ -162,16 +162,6 @@
             <input id="feed-url-input" type="url" placeholder="https://feeds.behold.so/xxxxxxxx" />
           </label>
           <a class="help-link" href="https://behold.so/docs/getting-started/" target="_blank" rel="noopener noreferrer" data-i18n="beholdSetup">Open Behold setup guide ↗</a>
-          <label>
-            <span data-i18n="refreshInterval">Browser refresh interval</span>
-            <select id="refresh-interval-input">
-              <option value="5">5 minutes</option>
-              <option value="10">10 minutes</option>
-              <option value="15">15 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="60">60 minutes</option>
-            </select>
-          </label>
         </section>
 
         <section class="settings-section">

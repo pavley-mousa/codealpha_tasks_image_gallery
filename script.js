@@ -2,7 +2,6 @@ const STORAGE_KEY = "codealpha_image_gallery_v2";
 
 const DEFAULT_SETTINGS = {
   instagramUsername: "pavley_mousa",
-  feedUrl: "",
   appTitle: "Instagram Gallery",
   subtitle: "Your latest Instagram posts, displayed automatically.",
   logoUrl: "",
@@ -179,7 +178,6 @@ const DEFAULT_INSTAGRAM_POSTS = [
 let instagramItems = structuredClone(DEFAULT_INSTAGRAM_POSTS);
 let filteredItems = [];
 let lightboxIndex = 0;
-let lastFetchAt = 0;
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -206,7 +204,6 @@ function init() {
   populateSettingsForm();
   renderManualList();
   renderGallery();
-  if (settings.feedUrl) fetchInstagramFeed();
 }
 
 function bindEvents() {
@@ -224,14 +221,15 @@ function bindEvents() {
   });
 
   $("#settings-btn").addEventListener("click", () => openModal("settings-modal"));
-  $("#connect-feed-btn").addEventListener("click", () => openModal("settings-modal"));
   $("#manage-btn").addEventListener("click", () => {
     renderManualList();
     openModal("manage-modal");
   });
-  $("#open-settings-from-error").addEventListener("click", () => openModal("settings-modal"));
-
-  $("#refresh-btn").addEventListener("click", fetchInstagramFeed);
+  $("#add-instagram-post-btn").addEventListener("click", () => {
+    renderManualList();
+    openModal("manage-modal");
+    setTimeout(() => $("#manual-instagram-input").focus(), 0);
+  });
   $("#search-input").addEventListener("input", renderGallery);
   $("#source-filter").addEventListener("change", renderGallery);
   $("#type-filter").addEventListener("change", renderGallery);
@@ -287,7 +285,9 @@ function applySettings() {
 
   const username = (settings.instagramUsername || "pavley_mousa").replace(/^@+/, "");
   $("#profile-name").textContent = `@${username}`;
-  $("#instagram-profile-btn").href = `https://www.instagram.com/${encodeURIComponent(username)}/`;
+  const profileUrl = `https://www.instagram.com/${encodeURIComponent(username)}/`;
+  $("#instagram-profile-btn").href = profileUrl;
+  if ($("#settings-instagram-link")) $("#settings-instagram-link").href = profileUrl;
   $("#hero-title").textContent = settings.heroTitle;
   $("#hero-description").textContent = settings.heroDescription;
   $("#footer-text").textContent = settings.footerText;
@@ -331,7 +331,6 @@ function translatePage() {
 
 function populateSettingsForm() {
   $("#instagram-username-input").value = settings.instagramUsername || DEFAULT_SETTINGS.instagramUsername;
-  $("#feed-url-input").value = settings.feedUrl;
   $("#app-title-input").value = settings.appTitle;
   $("#app-subtitle-input").value = settings.subtitle;
   $("#logo-url-input").value = settings.logoUrl;
@@ -347,7 +346,6 @@ function saveSettingsFromForm() {
   settings = {
     ...settings,
     instagramUsername: $("#instagram-username-input").value.trim().replace(/^@+/, "") || DEFAULT_SETTINGS.instagramUsername,
-    feedUrl: normalizeFeedUrl($("#feed-url-input").value.trim()),
     appTitle: $("#app-title-input").value.trim() || DEFAULT_SETTINGS.appTitle,
     subtitle: $("#app-subtitle-input").value.trim() || DEFAULT_SETTINGS.subtitle,
     logoUrl: $("#logo-url-input").value.trim(),
@@ -363,13 +361,6 @@ function saveSettingsFromForm() {
   applySettings();
   populateSettingsForm();
   closeModal("settings-modal");
-
-  if (settings.feedUrl) fetchInstagramFeed();
-  else {
-    instagramItems = [];
-    renderProfile(null);
-    renderGallery();
-  }
 }
 
 function resetSettings() {
@@ -382,110 +373,6 @@ function resetSettings() {
   renderGallery();
 }
 
-function normalizeFeedUrl(url) {
-  if (!url) return "";
-  try {
-    const parsed = new URL(url);
-    const host = parsed.hostname.replace(/^www\./, "");
-    if (host !== "feeds.behold.so") return url;
-    return `https://feeds.behold.so/${parsed.pathname.replace(/^\//, "")}`;
-  } catch {
-    return url;
-  }
-}
-
-async function fetchInstagramFeed() {
-  const url = normalizeFeedUrl(settings.feedUrl);
-  if (!url) {
-    setStatus("empty");
-    renderProfile(null);
-    renderGallery();
-    return;
-  }
-
-  setStatus("loading");
-  const cacheBuster = url.includes("?") ? "&" : "?";
-  
-  try {
-    const response = await fetch(`${url}${cacheBuster}_=${Date.now()}`, {
-      method: "GET",
-      mode: "cors",
-      cache: "no-store",
-      headers: { Accept: "application/json" }
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const data = await response.json();
-    instagramItems = normalizeInstagramPosts(data?.posts || []);
-    lastFetchAt = Date.now();
-    renderProfile(data);
-    renderGallery();
-    setStatus(instagramItems.length || manualItems.length ? "ready" : "empty");
-  } catch (error) {
-    console.error("Instagram feed error:", error);
-    renderProfile(null);
-    renderGallery();
-    setError(error.message || "Unknown error");
-  }
-}
-
-function normalizeInstagramPosts(posts) {
-  return posts.map((post, index) => {
-    const isReel = Boolean(post.isReel);
-    const type = isReel ? "reel" : post.mediaType === "CAROUSEL_ALBUM" ? "carousel" : post.mediaType === "VIDEO" ? "video" : "image";
-    const firstChild = Array.isArray(post.children) && post.children.length ? post.children[0] : null;
-    const imageSource = firstChild?.sizes?.medium?.mediaUrl ||
-      firstChild?.sizes?.large?.mediaUrl ||
-      post.sizes?.medium?.mediaUrl ||
-      post.sizes?.large?.mediaUrl ||
-      post.thumbnailUrl ||
-      post.mediaUrl ||
-      "";
-
-    return {
-      id: `instagram-${post.id || index}`,
-      source: "instagram",
-      title: post.prunedCaption?.split("\n")[0]?.slice(0, 70) || `@${post.username || "Instagram"}`,
-      caption: post.caption || post.prunedCaption || "",
-      image: imageSource,
-      alt: post.altText || post.prunedCaption || "Instagram post",
-      link: post.permalink || "#",
-      timestamp: post.timestamp || "",
-      type,
-      video: (post.mediaType === "VIDEO" ? post.mediaUrl : ""),
-      username: post.username || "",
-      likeCount: Number.isFinite(post.likeCount) ? post.likeCount : null,
-      commentsCount: Number.isFinite(post.commentsCount) ? post.commentsCount : null,
-      hashtags: Array.isArray(post.hashtags) ? post.hashtags : []
-    };
-  }).filter((item) => item.image);
-}
-
-function renderProfile(data) {
-  const profileName = data?.username || (settings.feedUrl ? "Instagram Feed" : "Instagram feed not connected");
-  const bio = data?.biography || (settings.feedUrl
-    ? "Connected feed"
-    : "Connect a Behold JSON feed from Settings to load your latest posts.");
-
-  $("#profile-name").textContent = profileName.startsWith("@") ? profileName : `@${profileName}`;
-  $("#profile-bio").textContent = bio;
-  $("#posts-count").textContent = data?.posts?.length ?? instagramItems.length ?? 0;
-  $("#followers-count").textContent = data?.followersCount ?? "—";
-  $("#last-sync").textContent = lastFetchAt ? new Date(lastFetchAt).toLocaleTimeString(settings.language === "ar" ? "ar-EG" : "en-US", { hour: "2-digit", minute: "2-digit" }) : "—";
-
-  const avatar = $("#profile-avatar");
-  if (data?.profilePictureUrl) {
-    avatar.innerHTML = "";
-    const img = document.createElement("img");
-    img.src = data.profilePictureUrl;
-    img.alt = "";
-    img.onerror = () => { avatar.textContent = "IG"; };
-    avatar.appendChild(img);
-  } else {
-    avatar.textContent = "IG";
-  }
-}
 
 function getCombinedItems() {
   return [...instagramItems, ...manualItems.map((item) => ({
@@ -601,8 +488,7 @@ function setStatusStateAfterRender() {
     return;
   }
 
-  if (settings.feedUrl || manualItems.length) setStatus("empty");
-  else setStatus("empty");
+  setStatus("empty");
 }
 
 function renderManualList() {
@@ -689,8 +575,8 @@ function saveManualItem() {
   const alt = $("#manual-alt-input").value.trim() || title;
   const existingId = $("#manual-id-input").value;
 
-  if (!image) {
-    $("#manual-image-input").focus();
+  if (!image && !instagramUrl) {
+    $("#manual-instagram-input").focus();
     return;
   }
 
@@ -851,23 +737,9 @@ function closeModal(id) {
 }
 
 function setStatus(type) {
-  const loading = $("#loading-state");
-  const error = $("#error-state");
   const empty = $("#empty-state");
-
-  loading.classList.add("hidden");
-  error.classList.add("hidden");
   empty.classList.add("hidden");
-
-  if (type === "loading") loading.classList.remove("hidden");
   if (type === "empty") empty.classList.remove("hidden");
-}
-
-function setError(message) {
-  $("#loading-state").classList.add("hidden");
-  $("#empty-state").classList.add("hidden");
-  $("#error-state").classList.remove("hidden");
-  $("#error-message").textContent = message;
 }
 
 function formatDate(timestamp) {

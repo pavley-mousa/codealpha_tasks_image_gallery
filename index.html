@@ -36,6 +36,10 @@
             <p id="profile-bio">Connect a Behold JSON feed from Settings to load your latest posts.</p>
           </div>
         </div>
+        <div class="profile-actions">
+          <a class="secondary-btn profile-link" id="instagram-profile-btn" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Instagram Profile</a>
+          <button class="primary-btn" id="connect-feed-btn" type="button" data-i18n="connectFeed">Connect Feed</button>
+        </div>
         <div class="profile-stats" id="profile-stats">
           <span><strong id="posts-count">0</strong><small data-i18n="posts">Posts</small></span>
           <span><strong id="followers-count">—</strong><small data-i18n="followers">Followers</small></span>
@@ -121,6 +125,7 @@
       <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="Previous">‹</button>
       <div class="lightbox-media-wrap">
         <img id="lightbox-image" src="" alt="" />
+        <video id="lightbox-video" controls playsinline preload="metadata" hidden></video>
       </div>
       <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Next">›</button>
       <div class="lightbox-info">
@@ -148,9 +153,14 @@
           <h3 data-i18n="instagramConnection">Instagram Connection</h3>
           <p class="muted" data-i18n="instagramHelp">Create a Behold JSON feed for your Instagram account, then paste the feed URL here.</p>
           <label>
+            <span data-i18n="instagramUsername">Instagram username</span>
+            <input id="instagram-username-input" type="text" maxlength="60" placeholder="@pavley_mousa" />
+          </label>
+          <label>
             <span data-i18n="feedUrl">Behold JSON Feed URL</span>
             <input id="feed-url-input" type="url" placeholder="https://feeds.behold.so/xxxxxxxx" />
           </label>
+          <a class="help-link" href="https://behold.so/docs/getting-started/" target="_blank" rel="noopener noreferrer" data-i18n="beholdSetup">Open Behold setup guide ↗</a>
           <label>
             <span data-i18n="refreshInterval">Browser refresh interval</span>
             <select id="refresh-interval-input">
@@ -259,6 +269,10 @@
           <label class="full">
             <span data-i18n="imageUrl">Image URL</span>
             <input id="manual-image-input" type="url" placeholder="https://..." />
+          </label>
+          <label class="full">
+            <span data-i18n="orUpload">Or upload an image</span>
+            <input id="manual-file-input" type="file" accept="image/*" />
           </label>
           <label class="full">
             <span data-i18n="postLink">Link</span>

@@ -181,7 +181,8 @@ const settingsKey = STORAGE_KEY + "_settings";
 const itemsKey = STORAGE_KEY + "_manualItems";
 
 let settings = sanitizeSettings(loadJson(settingsKey, DEFAULT_SETTINGS));
-const loadedManualItems = loadJson(itemsKey, []);\nlet manualItems = Array.isArray(loadedManualItems) ? loadedManualItems : [];
+const loadedManualItems = loadJson(itemsKey, []);
+let manualItems = Array.isArray(loadedManualItems) ? loadedManualItems : [];
 let filteredItems = [];
 let lightboxIndex = 0;
 

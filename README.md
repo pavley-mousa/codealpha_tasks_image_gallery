@@ -15,7 +15,7 @@ This project is intentionally **frontend only**:
 - No database
 - No secret API key shipped in the browser
 
-Behold documents its JSON feeds as a client-side integration: after creating a JSON feed, the posts are available from a public feed URL such as `https://feeds.behold.so/FEED_ID`, with no server-side code required. citeturn344512search0
+Behold documents its JSON feeds as a client-side integration: after creating a JSON feed, the posts are available from a public feed URL such as `https://feeds.behold.so/FEED_ID`, with no server-side code required.
 
 ## Instagram account
 
@@ -36,7 +36,7 @@ https://www.instagram.com/pavley_mousa/
 6. Open **Settings → Instagram Connection**.
 7. Paste the feed URL and save.
 
-Behold's current getting-started documentation says that connected accounts must be Business or Media Creator accounts because of an Instagram API change. citeturn344512search2
+Behold's current getting-started documentation says that connected accounts must be Business or Media Creator accounts because of an Instagram API change.
 
 ## Automatic updates
 
@@ -55,7 +55,7 @@ The feed response contains account metadata plus a `posts` array. Posts can incl
 - carousel child media
 - profile information
 
-Those fields are part of Behold's current JSON feed format. citeturn344512search0turn344512search6
+Those fields are part of Behold's current JSON feed format.
 
 The gallery supports images, videos, reels, and carousel posts. Carousel cards use the first optimized child image as the gallery thumbnail. Video/reel posts open with the video player when the feed provides a video source.
 
@@ -99,7 +99,7 @@ The gallery supports images, videos, reels, and carousel posts. Carousel cards u
 
 The site can automatically sync Instagram only through a feed provider or another browser-consumable Instagram API. The browser cannot safely hold a private Instagram access token or replace an authenticated server-side integration.
 
-This project therefore uses the Behold JSON Feed as the Instagram data source while keeping the actual gallery UI and application logic in this repository. Behold also documents a drop-in widget option, but this project uses the JSON feed so the gallery remains fully customizable. citeturn344512search0turn344512search4
+This project therefore uses the Behold JSON Feed as the Instagram data source while keeping the actual gallery UI and application logic in this repository. Behold also documents a drop-in widget option, but this project uses the JSON feed so the gallery remains fully customizable.
 
 ## Storage
 
@@ -120,4 +120,4 @@ For uploaded manual images, the app stores a browser Data URL and limits large f
 
 ## Notes
 
-Behold's feed post count is capped by the plan. Their current documentation says the Free plan can return up to 6 posts, while higher plans can allow more. citeturn344512search0
+Behold's feed post count is capped by the plan. Their current documentation says the Free plan can return up to 6 posts, while higher plans can allow more.

@@ -3,7 +3,6 @@ const STORAGE_KEY = "codealpha_image_gallery_v2";
 const DEFAULT_SETTINGS = {
   instagramUsername: "pavley_mousa",
   feedUrl: "",
-  refreshMinutes: 15,
   appTitle: "Instagram Gallery",
   subtitle: "Your latest Instagram posts, displayed automatically.",
   logoUrl: "",
@@ -180,7 +179,6 @@ const DEFAULT_INSTAGRAM_POSTS = [
 let instagramItems = structuredClone(DEFAULT_INSTAGRAM_POSTS);
 let filteredItems = [];
 let lightboxIndex = 0;
-let refreshTimer = null;
 let lastFetchAt = 0;
 
 const $ = (selector) => document.querySelector(selector);
@@ -208,7 +206,6 @@ function init() {
   populateSettingsForm();
   renderManualList();
   renderGallery();
-  scheduleAutoRefresh();
   if (settings.feedUrl) fetchInstagramFeed();
 }
 
@@ -274,12 +271,6 @@ function bindEvents() {
     if (event.key === "ArrowRight") showNext();
   });
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && settings.feedUrl) {
-      const interval = settings.refreshMinutes * 60 * 1000;
-      if (Date.now() - lastFetchAt >= interval) fetchInstagramFeed();
-    }
-  });
 }
 
 function saveSettings() {
@@ -341,7 +332,6 @@ function translatePage() {
 function populateSettingsForm() {
   $("#instagram-username-input").value = settings.instagramUsername || DEFAULT_SETTINGS.instagramUsername;
   $("#feed-url-input").value = settings.feedUrl;
-  $("#refresh-interval-input").value = String(settings.refreshMinutes);
   $("#app-title-input").value = settings.appTitle;
   $("#app-subtitle-input").value = settings.subtitle;
   $("#logo-url-input").value = settings.logoUrl;
@@ -358,7 +348,6 @@ function saveSettingsFromForm() {
     ...settings,
     instagramUsername: $("#instagram-username-input").value.trim().replace(/^@+/, "") || DEFAULT_SETTINGS.instagramUsername,
     feedUrl: normalizeFeedUrl($("#feed-url-input").value.trim()),
-    refreshMinutes: Number($("#refresh-interval-input").value) || 15,
     appTitle: $("#app-title-input").value.trim() || DEFAULT_SETTINGS.appTitle,
     subtitle: $("#app-subtitle-input").value.trim() || DEFAULT_SETTINGS.subtitle,
     logoUrl: $("#logo-url-input").value.trim(),
@@ -373,7 +362,6 @@ function saveSettingsFromForm() {
   saveSettings();
   applySettings();
   populateSettingsForm();
-  scheduleAutoRefresh();
   closeModal("settings-modal");
 
   if (settings.feedUrl) fetchInstagramFeed();
@@ -389,7 +377,6 @@ function resetSettings() {
   saveSettings();
   applySettings();
   populateSettingsForm();
-  scheduleAutoRefresh();
   instagramItems = [];
   renderProfile(null);
   renderGallery();
@@ -405,14 +392,6 @@ function normalizeFeedUrl(url) {
   } catch {
     return url;
   }
-}
-
-function scheduleAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  if (!settings.feedUrl) return;
-  refreshTimer = setInterval(() => {
-    if (!document.hidden) fetchInstagramFeed();
-  }, settings.refreshMinutes * 60 * 1000);
 }
 
 async function fetchInstagramFeed() {

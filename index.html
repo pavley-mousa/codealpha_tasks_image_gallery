@@ -40,9 +40,7 @@
           <a class="secondary-btn profile-link" id="instagram-profile-btn" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Instagram Profile</a>
         </div>
         <div class="profile-stats" id="profile-stats">
-          <span><strong id="posts-count">0</strong><small data-i18n="posts">Posts</small></span>
-          <span><strong id="followers-count">—</strong><small data-i18n="followers">Followers</small></span>
-          <span><strong id="last-sync">—</strong><small data-i18n="updated">Updated</small></span>
+          <span><strong id="posts-count">0</strong><small data-i18n="posts">Items</small></span>
         </div>
       </section>
 
@@ -67,6 +65,7 @@
           <select id="source-filter" aria-label="Source">
             <option value="all" data-i18n="allContent">All content</option>
             <option value="instagram" data-i18n="instagram">Instagram</option>
+            <option value="demo" data-i18n="demo">Demo</option>
             <option value="manual" data-i18n="manual">Manual</option>
           </select>
           <select id="type-filter" aria-label="Media type">
@@ -103,7 +102,7 @@
     </main>
 
     <footer class="site-footer">
-      <div id="footer-text">Frontend Only • Instagram Feed + Local Storage</div>
+      <div id="footer-text">Frontend Only • Manual Gallery • Local Storage</div>
       <button class="text-btn" id="manage-btn" type="button" data-i18n="manageGallery">Manage Gallery</button>
     </footer>
   </div>
@@ -208,7 +207,7 @@
 
       <div class="settings-note">
         <strong data-i18n="frontendOnlyTitle">Frontend Only</strong>
-        <span data-i18n="frontendOnlyText">Your settings and gallery posts are saved in this browser with localStorage. There is no Instagram feed synchronization or backend in this project.</span>
+        <span data-i18n="frontendOnlyText">Settings and gallery content are saved in this browser with localStorage. No backend, database, Instagram feed, or automatic sync is used.</span>
       </div>
 
       <div class="modal-actions">

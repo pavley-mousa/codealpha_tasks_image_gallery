@@ -181,7 +181,7 @@ const settingsKey = STORAGE_KEY + "_settings";
 const itemsKey = STORAGE_KEY + "_manualItems";
 
 let settings = sanitizeSettings(loadJson(settingsKey, DEFAULT_SETTINGS));
-let manualItems = Array.isArray(loadJson(itemsKey, [])) ? loadJson(itemsKey, []) : [];
+const loadedManualItems = loadJson(itemsKey, []);\nlet manualItems = Array.isArray(loadedManualItems) ? loadedManualItems : [];
 let filteredItems = [];
 let lightboxIndex = 0;
 
@@ -202,27 +202,15 @@ const DEFAULT_INSTAGRAM_POSTS = [
   }
 ];
 
-function demoSvg(title, subtitle, start, end, symbol) {
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">' +
-    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="' + start + '"/><stop offset="100%" stop-color="' + end + '"/></linearGradient></defs>' +
-    '<rect width="1200" height="1200" rx="54" fill="url(#g)"/>' +
-    '<circle cx="930" cy="220" r="230" fill="#ffffff" fill-opacity=".12"/>' +
-    '<circle cx="210" cy="1000" r="310" fill="#000000" fill-opacity=".12"/>' +
-    '<text x="84" y="150" fill="white" font-family="Arial,sans-serif" font-size="34" font-weight="700" opacity=".85">DEMO GALLERY</text>' +
-    '<text x="84" y="800" fill="white" font-family="Arial,sans-serif" font-size="118" font-weight="800">' + symbol + '</text>' +
-    '<text x="84" y="940" fill="white" font-family="Arial,sans-serif" font-size="58" font-weight="800">' + title + '</text>' +
-    '<text x="84" y="1000" fill="white" font-family="Arial,sans-serif" font-size="28" opacity=".86">' + subtitle + '</text>' +
-    '</svg>';
-  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
-}
-
 const DEMO_ITEMS = [
-  { id: "demo-01", source: "demo", title: "Neon Night", caption: "Demo card for dark theme.", image: demoSvg("NEON NIGHT", "Dark theme test", "#4c1d95", "#db2777", "01"), alt: "Demo neon gradient", category: "Demo", timestamp: "2026-09-27T20:00:00.000Z", type: "image", link: "#" },
-  { id: "demo-02", source: "demo", title: "Ocean Blue", caption: "Demo card for clean image layouts.", image: demoSvg("OCEAN BLUE", "Image card test", "#0369a1", "#22d3ee", "02"), alt: "Demo blue gradient", category: "Demo", timestamp: "2026-09-26T20:00:00.000Z", type: "image", link: "#" },
-  { id: "demo-03", source: "demo", title: "Sunset", caption: "Demo card for warm visual content.", image: demoSvg("SUNSET", "Visual balance test", "#9a3412", "#f59e0b", "03"), alt: "Demo sunset gradient", category: "Demo", timestamp: "2026-09-25T20:00:00.000Z", type: "image", link: "#" },
-  { id: "demo-04", source: "demo", title: "Forest", caption: "Demo card for responsive grid testing.", image: demoSvg("FOREST", "Responsive test", "#14532d", "#65a30d", "04"), alt: "Demo green gradient", category: "Demo", timestamp: "2026-09-24T20:00:00.000Z", type: "image", link: "#" },
-  { id: "demo-05", source: "demo", title: "Purple Flow", caption: "Demo card for search and filters.", image: demoSvg("PURPLE FLOW", "Search and filter test", "#312e81", "#7c3aed", "05"), alt: "Demo purple gradient", category: "Demo", timestamp: "2026-09-23T20:00:00.000Z", type: "image", link: "#" },
-  { id: "demo-06", source: "demo", title: "Minimal", caption: "Demo card for mobile layout testing.", image: demoSvg("MINIMAL", "Mobile layout test", "#111827", "#4b5563", "06"), alt: "Demo neutral gradient", category: "Demo", timestamp: "2026-09-22T20:00:00.000Z", type: "image", link: "#" }
+  { id: "demo-01", source: "demo", title: "Aurora", caption: "Local SVG demo for the main gallery.", image: "demo/aurora.svg", alt: "Abstract aurora gradient artwork", category: "Demo", timestamp: "2026-09-27T20:00:00.000Z", type: "image", link: "demo/aurora.svg" },
+  { id: "demo-02", source: "demo", title: "Ocean", caption: "Local SVG demo for image card rendering.", image: "demo/ocean.svg", alt: "Abstract blue ocean artwork", category: "Demo", timestamp: "2026-09-26T20:00:00.000Z", type: "image", link: "demo/ocean.svg" },
+  { id: "demo-03", source: "demo", title: "Sunset Grid", caption: "Local SVG demo for warm visual content.", image: "demo/sunset-grid.svg", alt: "Abstract sunset grid artwork", category: "Demo", timestamp: "2026-09-25T20:00:00.000Z", type: "image", link: "demo/sunset-grid.svg" },
+  { id: "demo-04", source: "demo", title: "Forest Shapes", caption: "Local SVG demo for responsive grid testing.", image: "demo/forest.svg", alt: "Abstract forest shapes artwork", category: "Demo", timestamp: "2026-09-24T20:00:00.000Z", type: "image", link: "demo/forest.svg" },
+  { id: "demo-05", source: "demo", title: "Cyber Flow", caption: "Local SVG demo for search and filtering.", image: "demo/cyber-flow.svg", alt: "Abstract cyber flow artwork", category: "Demo", timestamp: "2026-09-23T20:00:00.000Z", type: "image", link: "demo/cyber-flow.svg" },
+  { id: "demo-06", source: "demo", title: "Coffee Desk", caption: "Local SVG demo for everyday content.", image: "demo/coffee-desk.svg", alt: "Abstract coffee desk artwork", category: "Demo", timestamp: "2026-09-22T20:00:00.000Z", type: "image", link: "demo/coffee-desk.svg" },
+  { id: "demo-07", source: "demo", title: "Purple Pulse", caption: "Local SVG demo for dark and light themes.", image: "demo/purple-pulse.svg", alt: "Abstract purple pulse artwork", category: "Demo", timestamp: "2026-09-21T20:00:00.000Z", type: "image", link: "demo/purple-pulse.svg" },
+  { id: "demo-08", source: "demo", title: "Minimal Lines", caption: "Local SVG demo for mobile layout testing.", image: "demo/minimal-lines.svg", alt: "Minimal abstract line artwork", category: "Demo", timestamp: "2026-09-20T20:00:00.000Z", type: "image", link: "demo/minimal-lines.svg" }
 ];
 
 const $ = (selector) => document.querySelector(selector);
@@ -301,16 +289,28 @@ function bindEvents() {
     }
 
     const card = event.target.closest(".gallery-item");
-    if (card) {
+    if (card && !event.target.closest("a,button,input,select,textarea")) {
       openLightbox(Number(card.dataset.index));
     }
   });
 
   document.addEventListener("keydown", function(event) {
-    if ($("#lightbox-modal").classList.contains("hidden")) return;
-    if (event.key === "Escape") closeModal("lightbox-modal");
-    if (event.key === "ArrowLeft") showPrevious();
-    if (event.key === "ArrowRight") showNext();
+    const lightboxOpen = !$("#lightbox-modal").classList.contains("hidden");
+
+    if (lightboxOpen) {
+      if (event.key === "Escape") closeModal("lightbox-modal");
+      if (event.key === "ArrowLeft") showPrevious();
+      if (event.key === "ArrowRight") showNext();
+      return;
+    }
+
+    if (event.key !== "Enter" && event.key !== " ") return;
+
+    const activeCard = document.activeElement && document.activeElement.closest(".gallery-item");
+    if (!activeCard) return;
+
+    event.preventDefault();
+    openLightbox(Number(activeCard.dataset.index));
   });
 }
 
@@ -500,6 +500,8 @@ function saveManualItem() {
   }
 
   const previous = manualItems.find(function(entry) { return entry.id === existingId; });
+  const previousImage = previous && previous.image ? previous.image : "";
+  const itemImage = image || previousImage;
   const item = {
     id: existingId || "manual-" + Date.now(),
     source: "manual",

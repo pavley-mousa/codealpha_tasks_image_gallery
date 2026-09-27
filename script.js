@@ -1,6 +1,7 @@
 const STORAGE_KEY = "codealpha_image_gallery_v2";
 
 const DEFAULT_SETTINGS = {
+  instagramUsername: "pavley_mousa",
   feedUrl: "",
   refreshMinutes: 15,
   appTitle: "Instagram Gallery",
@@ -16,6 +17,11 @@ const DEFAULT_SETTINGS = {
 
 const TRANSLATIONS = {
   en: {
+    instagramProfile: "Instagram Profile",
+    connectFeed: "Connect Feed",
+    instagramUsername: "Instagram username",
+    beholdSetup: "Open Behold setup guide ↗",
+    orUpload: "Or upload an image",
     posts: "Posts",
     followers: "Followers",
     updated: "Updated",
@@ -81,6 +87,11 @@ const TRANSLATIONS = {
     saveEdit: "Save Changes"
   },
   ar: {
+    instagramProfile: "حساب إنستجرام",
+    connectFeed: "ربط الـFeed",
+    instagramUsername: "اسم حساب إنستجرام",
+    beholdSetup: "فتح شرح إعداد Behold ↗",
+    orUpload: "أو ارفع صورة",
     posts: "منشورات",
     followers: "متابع",
     updated: "آخر تحديث",
@@ -199,6 +210,7 @@ function bindEvents() {
   });
 
   $("#settings-btn").addEventListener("click", () => openModal("settings-modal"));
+  $("#connect-feed-btn").addEventListener("click", () => openModal("settings-modal"));
   $("#manage-btn").addEventListener("click", () => {
     renderManualList();
     openModal("manage-modal");
@@ -216,6 +228,7 @@ function bindEvents() {
 
   $("#save-manual-btn").addEventListener("click", saveManualItem);
   $("#clear-manual-btn").addEventListener("click", clearManualForm);
+  $("#manual-file-input").addEventListener("change", handleManualFile);
 
   $("#lightbox-prev").addEventListener("click", showPrevious);
   $("#lightbox-next").addEventListener("click", showNext);
@@ -263,6 +276,10 @@ function applySettings() {
 
   $("#app-title").textContent = settings.appTitle;
   $("#app-subtitle").textContent = settings.subtitle;
+
+  const username = (settings.instagramUsername || "pavley_mousa").replace(/^@+/, "");
+  $("#profile-name").textContent = `@${username}`;
+  $("#instagram-profile-btn").href = `https://www.instagram.com/${encodeURIComponent(username)}/`;
   $("#hero-title").textContent = settings.heroTitle;
   $("#hero-description").textContent = settings.heroDescription;
   $("#footer-text").textContent = settings.footerText;
@@ -305,6 +322,7 @@ function translatePage() {
 }
 
 function populateSettingsForm() {
+  $("#instagram-username-input").value = settings.instagramUsername || DEFAULT_SETTINGS.instagramUsername;
   $("#feed-url-input").value = settings.feedUrl;
   $("#refresh-interval-input").value = String(settings.refreshMinutes);
   $("#app-title-input").value = settings.appTitle;
@@ -321,6 +339,7 @@ function populateSettingsForm() {
 function saveSettingsFromForm() {
   settings = {
     ...settings,
+    instagramUsername: $("#instagram-username-input").value.trim().replace(/^@+/, "") || DEFAULT_SETTINGS.instagramUsername,
     feedUrl: normalizeFeedUrl($("#feed-url-input").value.trim()),
     refreshMinutes: Number($("#refresh-interval-input").value) || 15,
     appTitle: $("#app-title-input").value.trim() || DEFAULT_SETTINGS.appTitle,
@@ -438,6 +457,7 @@ function normalizeInstagramPosts(posts) {
       link: post.permalink || "#",
       timestamp: post.timestamp || "",
       type,
+      video: (post.mediaType === "VIDEO" ? post.mediaUrl : ""),
       username: post.username || "",
       likeCount: Number.isFinite(post.likeCount) ? post.likeCount : null,
       commentsCount: Number.isFinite(post.commentsCount) ? post.commentsCount : null,
@@ -623,10 +643,36 @@ function renderManualList() {
   });
 }
 
+async function handleManualFile(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    event.target.value = "";
+    return;
+  }
+  if (file.size > 3 * 1024 * 1024) {
+    window.alert(settings.language === "ar"
+      ? "يفضل استخدام صورة أقل من 3MB لأن الصورة ستتخزن داخل المتصفح."
+      : "Please use an image smaller than 3MB because it will be stored in the browser.");
+    event.target.value = "";
+    return;
+  }
+
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  $("#manual-image-input").value = "";
+  $("#manual-file-input").dataset.dataUrl = String(dataUrl);
+}
+
 function saveManualItem() {
   const title = $("#manual-title-input").value.trim();
   const category = $("#manual-category-input").value.trim();
-  const image = $("#manual-image-input").value.trim();
+  const image = $("#manual-image-input").value.trim() || $("#manual-file-input").dataset.dataUrl || "";
   const link = $("#manual-link-input").value.trim() || "#";
   const alt = $("#manual-alt-input").value.trim() || title;
   const existingId = $("#manual-id-input").value;
@@ -694,6 +740,8 @@ function clearManualForm() {
   $("#manual-image-input").value = "";
   $("#manual-link-input").value = "";
   $("#manual-alt-input").value = "";
+  $("#manual-file-input").value = "";
+  delete $("#manual-file-input").dataset.dataUrl;
   $("#save-manual-btn").textContent = t("addImage");
 }
 
@@ -708,8 +756,23 @@ function updateLightbox() {
   const item = filteredItems[lightboxIndex];
   if (!item) return;
 
-  $("#lightbox-image").src = item.image;
-  $("#lightbox-image").alt = item.alt || item.title || "";
+  const image = $("#lightbox-image");
+  const video = $("#lightbox-video");
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+
+  if (item.type === "video" || item.type === "reel") {
+    image.hidden = true;
+    video.hidden = false;
+    video.src = item.video || item.image;
+  } else {
+    video.hidden = true;
+    image.hidden = false;
+    image.src = item.image;
+    image.alt = item.alt || item.title || "";
+  }
+
   $("#lightbox-title").textContent = item.title || "Instagram post";
   $("#lightbox-caption").textContent = item.caption || item.alt || "";
   $("#lightbox-meta").textContent = [

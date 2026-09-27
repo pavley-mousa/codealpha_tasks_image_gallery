@@ -1,51 +1,123 @@
 # Instagram Image Gallery
 
-Frontend-only responsive image gallery with automatic Instagram feed updates.
+Professional frontend-only Instagram gallery for **@pavley_mousa**.
 
-## Instagram automatic feed
+## Architecture
 
-The project does not use a backend, server, or secret API key.
+This project is intentionally **frontend only**:
 
-To display the latest Instagram posts automatically:
-
-1. Create a free Behold account.
-2. Connect your Instagram account.
-3. Create a **JSON** feed for that account.
-4. Copy the feed URL. It looks like:
-   `https://feeds.behold.so/xxxxxxxx`
-5. Open the gallery and go to **Settings**.
-6. Paste the URL into **Behold JSON Feed URL** and save.
-
-The browser fetches the JSON feed directly, renders the posts, and refreshes it on the interval selected in Settings.
-
-Behold's JSON feed is designed for client-side use and returns the account information plus recent posts, including image URLs, captions, timestamps, permalinks, media types, and optimized image sizes.
-
-## Features
-
-- Automatic Instagram feed rendering
-- New posts appear automatically when the connected feed refreshes
-- Responsive gallery
-- Search captions and hashtags
-- Filter by Instagram/manual and media type
-- Newest/oldest sorting
-- Lightbox with previous/next navigation
-- Arabic / English interface
-- Dark / Light theme
-- App name, subtitle, logo, accent color, hero text, footer text and refresh interval are editable
-- Manual image add/edit/delete
-- Browser persistence with localStorage
-- No backend
+- HTML
+- CSS
+- Vanilla JavaScript
+- localStorage for browser-side settings and manual gallery content
+- Behold JSON Feed for Instagram synchronization
+- No custom backend
 - No database
-- No secret API credentials in frontend code
+- No secret API key shipped in the browser
 
-## Important
+Behold documents its JSON feeds as a client-side integration: after creating a JSON feed, the posts are available from a public feed URL such as `https://feeds.behold.so/FEED_ID`, with no server-side code required. citeturn344512search0
 
-The Instagram feed itself depends on the connected Behold service. Instagram does not provide a safe anonymous browser endpoint that can simply enumerate an account's latest media with no authentication layer. Behold handles the Instagram connection and exposes the feed for client-side consumption.
+## Instagram account
 
-Settings and manual gallery items are stored per browser/device. They are not shared between visitors.
+The UI is preconfigured to display:
+
+**@pavley_mousa**
+
+Instagram profile:
+https://www.instagram.com/pavley_mousa/
+
+## Connect Instagram
+
+1. Create or sign in to a Behold account.
+2. Connect the Instagram account.
+3. Create a **JSON** feed.
+4. Copy the generated feed URL.
+5. Open this gallery.
+6. Open **Settings → Instagram Connection**.
+7. Paste the feed URL and save.
+
+Behold's current getting-started documentation says that connected accounts must be Business or Media Creator accounts because of an Instagram API change. citeturn344512search2
+
+## Automatic updates
+
+The browser fetches the JSON feed directly and refreshes it using the interval selected in Settings.
+
+The feed response contains account metadata plus a `posts` array. Posts can include:
+
+- Instagram permalink
+- timestamp
+- media type
+- image/video URLs
+- optimized image sizes
+- caption
+- hashtags and mentions
+- likes/comments counts
+- carousel child media
+- profile information
+
+Those fields are part of Behold's current JSON feed format. citeturn344512search0turn344512search6
+
+The gallery supports images, videos, reels, and carousel posts. Carousel cards use the first optimized child image as the gallery thumbnail. Video/reel posts open with the video player when the feed provides a video source.
+
+## What is editable from the website
+
+### App identity
+- App name
+- Subtitle
+- Logo URL
+- Accent color
+
+### Hero
+- Hero title
+- Hero description
+- Footer text
+
+### Appearance
+- Dark
+- Light
+- System theme
+- English
+- Arabic
+
+### Instagram
+- Instagram username shown in the UI
+- Behold JSON feed URL
+- Browser refresh interval
+
+### Gallery
+- Search
+- Source filter
+- Media-type filter
+- Newest/oldest sorting
+- Lightbox
+- Previous/next navigation
+- Instagram post links
+- Manual image add/edit/delete
+- Manual image upload from the device
+
+## Important frontend-only limitation
+
+The site can automatically sync Instagram only through a feed provider or another browser-consumable Instagram API. The browser cannot safely hold a private Instagram access token or replace an authenticated server-side integration.
+
+This project therefore uses the Behold JSON Feed as the Instagram data source while keeping the actual gallery UI and application logic in this repository. Behold also documents a drop-in widget option, but this project uses the JSON feed so the gallery remains fully customizable. citeturn344512search0turn344512search4
+
+## Storage
+
+Settings and manual gallery items are stored in the visitor's browser with localStorage.
+
+That means:
+- changes are persistent on that browser/device
+- settings are not shared between visitors
+- manual images are not uploaded to a server
+
+For uploaded manual images, the app stores a browser Data URL and limits large files to help avoid localStorage limits.
 
 ## Files
 
-- `index.html` — app structure and modals
-- `style.css` — responsive UI and themes
-- `script.js` — state, Instagram feed loading, localStorage, filters, lightbox and settings
+- `index.html` — UI, modals, settings, lightbox
+- `style.css` — responsive design, dark/light themes, components
+- `script.js` — Instagram synchronization, rendering, filters, localStorage, manual gallery and lightbox
+
+## Notes
+
+Behold's feed post count is capped by the plan. Their current documentation says the Free plan can return up to 6 posts, while higher plans can allow more. citeturn344512search0

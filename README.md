@@ -40,7 +40,7 @@ Behold's current getting-started documentation says that connected accounts must
 
 ## Automatic updates
 
-The browser fetches the JSON feed directly and refreshes it using the interval selected in Settings.
+The browser fetches the JSON feed only when the user presses the Refresh button. Automatic background feed updates are disabled.
 
 The feed response contains account metadata plus a `posts` array. Posts can include:
 
@@ -82,7 +82,6 @@ The gallery supports images, videos, reels, and carousel posts. Carousel cards u
 ### Instagram
 - Instagram username shown in the UI
 - Behold JSON feed URL
-- Browser refresh interval
 
 ### Gallery
 - Search

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Image Gallery | CodeAlpha</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <h1>Photo Gallery</h1>
+    <p>Explore categorized collection with interactive lightbox view</p>
+  </header>
+
+  <!-- فلاتر التصنيف (Bonus Requirement) -->
+  <div class="filter-container">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="nature">Nature</button>
+    <button class="filter-btn" data-filter="architecture">Architecture</button>
+    <button class="filter-btn" data-filter="tech">Technology</button>
+  </div>
+
+  <!-- شبكة الصور -->
+  <main class="gallery-container">
+    <div class="gallery-grid" id="gallery-grid">
+      
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=80" alt="Foggy Mountain Valley" />
+        <div class="item-overlay">
+          <h3>Foggy Mountain</h3>
+          <span>Nature</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80" alt="Minimalist Architecture" />
+        <div class="item-overlay">
+          <h3>Modern Geometric Building</h3>
+          <span>Architecture</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="tech">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80" alt="Computer Chipboard" />
+        <div class="item-overlay">
+          <h3>Microchip Circuit</h3>
+          <span>Technology</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=80" alt="Sunlight in Forest" />
+        <div class="item-overlay">
+          <h3>Deep Forest Light</h3>
+          <span>Nature</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80" alt="Modern Skyscraper" />
+        <div class="item-overlay">
+          <h3>Corporate Glass Tower</h3>
+          <span>Architecture</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="tech">
+        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80" alt="Cyber Matrix Code" />
+        <div class="item-overlay">
+          <h3>Binary Matrix Security</h3>
+          <span>Technology</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80" alt="Sunset Over Ocean" />
+        <div class="item-overlay">
+          <h3>Tropical Beach Sunset</h3>
+          <span>Nature</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?w=800&auto=format&fit=crop&q=80" alt="Classic Historic Facade" />
+        <div class="item-overlay">
+          <h3>Historic Stone Archway</h3>
+          <span>Architecture</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- نافذة الـ Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-btn close-btn" id="close-btn" aria-label="Close">&times;</button>
+    <button class="lightbox-btn prev-btn" id="prev-btn" aria-label="Previous">&#10094;</button>
+    
+    <div class="lightbox-content">
+      <img src="" alt="Enlarged View" id="lightbox-img" />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <button class="lightbox-btn next-btn" id="next-btn" aria-label="Next">&#10095;</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -31,14 +31,13 @@
         <div class="profile-main">
           <div class="profile-avatar" id="profile-avatar">IG</div>
           <div>
-            <div class="eyebrow" id="live-label">LIVE INSTAGRAM</div>
-            <h2 id="profile-name">Instagram feed not connected</h2>
-            <p id="profile-bio">Connect a Behold JSON feed from Settings to load your latest posts.</p>
+            <div class="eyebrow" id="live-label">INSTAGRAM GALLERY</div>
+            <h2 id="profile-name">@pavley_mousa</h2>
+            <p id="profile-bio">Add Instagram posts one by one to your gallery.</p>
           </div>
         </div>
         <div class="profile-actions">
           <a class="secondary-btn profile-link" id="instagram-profile-btn" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Instagram Profile</a>
-          <button class="primary-btn" id="connect-feed-btn" type="button" data-i18n="connectFeed">Connect Feed</button>
         </div>
         <div class="profile-stats" id="profile-stats">
           <span><strong id="posts-count">0</strong><small data-i18n="posts">Posts</small></span>
@@ -49,13 +48,13 @@
 
       <section class="hero card">
         <div>
-          <span class="badge" id="sync-badge">AUTO SYNC</span>
+          <span class="badge" id="sync-badge">MANUAL GALLERY</span>
           <h2 id="hero-title">Latest Instagram posts</h2>
-          <p id="hero-description">Posts load from your connected feed when you press Refresh.</p>
+          <p id="hero-description">Add Instagram posts one by one and keep your gallery under your control.</p>
         </div>
-        <button class="primary-btn" id="refresh-btn" type="button">
-          <span>↻</span>
-          <span data-i18n="refresh">Refresh</span>
+        <button class="primary-btn" id="add-instagram-post-btn" type="button">
+          <span>＋</span>
+          <span data-i18n="addInstagramPost">Add Instagram Post</span>
         </button>
       </section>
 
@@ -85,18 +84,9 @@
       </section>
 
       <section class="status-area" aria-live="polite">
-        <div id="loading-state" class="loading-state hidden">
-          <div class="spinner"></div>
-          <span data-i18n="loading">Loading posts...</span>
-        </div>
-        <div id="error-state" class="empty-state hidden">
-          <strong data-i18n="feedErrorTitle">Instagram feed could not be loaded</strong>
-          <p id="error-message"></p>
-          <button class="secondary-btn" id="open-settings-from-error" type="button" data-i18n="openSettings">Open Settings</button>
-        </div>
         <div id="empty-state" class="empty-state hidden">
           <strong data-i18n="emptyTitle">No posts found</strong>
-          <p data-i18n="emptyText">Add a feed URL in Settings or add manual images from Manage Gallery.</p>
+          <p data-i18n="emptyText">Add Instagram posts or images from Manage Gallery.</p>
         </div>
       </section>
 
@@ -151,17 +141,13 @@
 
       <div class="settings-grid">
         <section class="settings-section">
-          <h3 data-i18n="instagramConnection">Instagram Connection</h3>
-          <p class="muted" data-i18n="instagramHelp">Create a Behold JSON feed for your Instagram account, then paste the feed URL here. Use Refresh when you want to load the latest posts.</p>
+          <h3 data-i18n="instagramProfileSettings">Instagram Profile</h3>
+          <p class="muted" data-i18n="instagramProfileHelp">Posts are added to this gallery manually, one Instagram post at a time. No feed or automatic synchronization is used.</p>
           <label>
             <span data-i18n="instagramUsername">Instagram username</span>
             <input id="instagram-username-input" type="text" maxlength="60" placeholder="@pavley_mousa" />
           </label>
-          <label>
-            <span data-i18n="feedUrl">Behold JSON Feed URL</span>
-            <input id="feed-url-input" type="url" placeholder="https://feeds.behold.so/xxxxxxxx" />
-          </label>
-          <a class="help-link" href="https://behold.so/docs/getting-started/" target="_blank" rel="noopener noreferrer" data-i18n="beholdSetup">Open Behold setup guide ↗</a>
+          <a class="help-link" id="settings-instagram-link" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Open Instagram Profile ↗</a>
         </section>
 
         <section class="settings-section">
@@ -222,7 +208,7 @@
 
       <div class="settings-note">
         <strong data-i18n="frontendOnlyTitle">Frontend Only</strong>
-        <span data-i18n="frontendOnlyText">Your settings and manual images are saved in this browser with localStorage. Instagram syncing is provided by the connected Behold feed, so no backend is stored in this project.</span>
+        <span data-i18n="frontendOnlyText">Your settings and gallery posts are saved in this browser with localStorage. There is no Instagram feed synchronization or backend in this project.</span>
       </div>
 
       <div class="modal-actions">

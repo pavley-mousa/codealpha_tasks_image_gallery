@@ -448,6 +448,13 @@ function getInstagramTitle(url) {
 function getInstagramType(url) {
   const normalized = normalizeInstagramPostUrl(url);
   if (!normalized) return "image";
+  const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
+  return pathParts[0] === "reel" || pathParts[0] === "tv" ? "reel" : "image";
+}
+
+function getInstagramType(url) {
+  const normalized = normalizeInstagramPostUrl(url);
+  if (!normalized) return "image";
 
   const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
   return pathParts[0] === "reel" || pathParts[0] === "tv" ? "reel" : "image";

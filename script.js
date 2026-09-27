@@ -160,7 +160,24 @@ const TRANSLATIONS = {
 
 let settings = loadJson("settings", DEFAULT_SETTINGS);
 let manualItems = loadJson("manualItems", []);
-let instagramItems = [];
+const DEFAULT_INSTAGRAM_POSTS = [
+  {
+    id: "instagram-featured-DYDoOcBjP4k",
+    source: "instagram",
+    title: "Instagram post",
+    caption: "",
+    image: "",
+    alt: "@pavley_mousa Instagram post",
+    link: "https://www.instagram.com/p/DYDoOcBjP4k/",
+    embed: "https://www.instagram.com/p/DYDoOcBjP4k/embed/",
+    timestamp: "",
+    type: "image",
+    username: "pavley_mousa",
+    hashtags: []
+  }
+];
+
+let instagramItems = structuredClone(DEFAULT_INSTAGRAM_POSTS);
 let filteredItems = [];
 let lightboxIndex = 0;
 let refreshTimer = null;
@@ -529,14 +546,29 @@ function renderGallery() {
     card.tabIndex = 0;
     card.setAttribute("role", "button");
 
-    const image = document.createElement("img");
-    image.loading = "lazy";
-    image.src = item.image;
-    image.alt = item.alt || item.title;
-    image.onerror = () => {
-      card.classList.add("image-error");
-      image.removeAttribute("src");
-    };
+    if (item.embed) {
+      const embedWrap = document.createElement("div");
+      embedWrap.className = "instagram-embed-preview";
+      const frame = document.createElement("iframe");
+      frame.src = item.embed;
+      frame.title = item.title || "Instagram post";
+      frame.loading = "lazy";
+      frame.setAttribute("allowtransparency", "true");
+      frame.setAttribute("scrolling", "no");
+      frame.setAttribute("frameborder", "0");
+      embedWrap.appendChild(frame);
+      card.appendChild(embedWrap);
+    } else {
+      const image = document.createElement("img");
+      image.loading = "lazy";
+      image.src = item.image;
+      image.alt = item.alt || item.title;
+      image.onerror = () => {
+        card.classList.add("image-error");
+        image.removeAttribute("src");
+      };
+      card.appendChild(image);
+    }
 
     const overlay = document.createElement("div");
     overlay.className = "item-overlay";
@@ -567,7 +599,7 @@ function renderGallery() {
 
     body.append(title, meta);
     overlay.append(topRow, body);
-    card.append(image, overlay);
+    card.appendChild(overlay);
 
     if (item.type !== "image") {
       const play = document.createElement("div");
@@ -674,6 +706,7 @@ function saveManualItem() {
   const category = $("#manual-category-input").value.trim();
   const image = $("#manual-image-input").value.trim() || $("#manual-file-input").dataset.dataUrl || "";
   const link = $("#manual-link-input").value.trim() || "#";
+  const instagramUrl = normalizeInstagramPostUrl($("#manual-instagram-input").value.trim());
   const alt = $("#manual-alt-input").value.trim() || title;
   const existingId = $("#manual-id-input").value;
 
@@ -688,6 +721,8 @@ function saveManualItem() {
     category,
     image,
     link,
+    instagramUrl,
+    embed: instagramUrl ? `${instagramUrl}/embed/` : "",
     alt,
     timestamp: existingId
       ? manualItems.find((entry) => entry.id === existingId)?.timestamp || new Date().toISOString()
@@ -713,6 +748,7 @@ function editManualItem(id) {
   $("#manual-category-input").value = item.category || "";
   $("#manual-image-input").value = item.image || "";
   $("#manual-link-input").value = item.link || "";
+  $("#manual-instagram-input").value = item.instagramUrl || "";
   $("#manual-alt-input").value = item.alt || "";
   $("#save-manual-btn").textContent = t("saveEdit");
   $("#manual-title-input").focus();
@@ -739,10 +775,24 @@ function clearManualForm() {
   $("#manual-category-input").value = "";
   $("#manual-image-input").value = "";
   $("#manual-link-input").value = "";
+  $("#manual-instagram-input").value = "";
   $("#manual-alt-input").value = "";
   $("#manual-file-input").value = "";
   delete $("#manual-file-input").dataset.dataUrl;
   $("#save-manual-btn").textContent = t("addImage");
+}
+
+function normalizeInstagramPostUrl(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    if (!/(^|\.)instagram\.com$/i.test(u.hostname)) return "";
+    const match = u.pathname.match(/^\/(p|reel|tv)\/([^/]+)/i);
+    if (!match) return "";
+    return `https://www.instagram.com/${match[1].toLowerCase()}/${match[2]}`;
+  } catch {
+    return "";
+  }
 }
 
 function openLightbox(index) {
@@ -758,11 +808,19 @@ function updateLightbox() {
 
   const image = $("#lightbox-image");
   const video = $("#lightbox-video");
+  const existingEmbed = $("#lightbox-embed");
+
   video.pause();
   video.removeAttribute("src");
   video.load();
+  image.hidden = true;
+  video.hidden = true;
+  existingEmbed.hidden = true;
 
-  if (item.type === "video" || item.type === "reel") {
+  if (item.embed) {
+    existingEmbed.src = item.embed;
+    existingEmbed.hidden = false;
+  } else if (item.type === "video" || item.type === "reel") {
     image.hidden = true;
     video.hidden = false;
     video.src = item.video || item.image;

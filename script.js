@@ -1,4 +1,5 @@
-const STORAGE_KEY = "codealpha_image_gallery_v3";
+const STORAGE_KEY = "codealpha_image_gallery_v4";
+const LEGACY_STORAGE_KEY = "codealpha_image_gallery_v3";
 
 const DEFAULT_SETTINGS = {
   appTitle: "Image Gallery",
@@ -146,28 +147,52 @@ function saveJson(key, value) {
 }
 
 function sanitizeSettings(raw) {
-
+  raw = raw && typeof raw === "object" ? raw : {};
   return {
-    appTitle: String(migrate(oldTitle, "Gallery", DEFAULT_SETTINGS.appTitle) || DEFAULT_SETTINGS.appTitle),
-    subtitle: String(migrate(oldSubtitle, "A clean gallery for your Gallery images.", DEFAULT_SETTINGS.subtitle) || DEFAULT_SETTINGS.subtitle),
-    logoUrl: String(raw && raw.logoUrl || ""),
-    accentColor: /^#[0-9a-f]{6}$/i.test(raw && raw.accentColor || "") ? raw.accentColor : DEFAULT_SETTINGS.accentColor,
-    heroTitle: String(migrate(oldHeroTitle, "Your Image Gallery", DEFAULT_SETTINGS.heroTitle) || DEFAULT_SETTINGS.heroTitle),
-    heroDescription: String(migrate(oldHeroDescription, "Add Gallery images one by one, preview them here, and keep everything organized.", DEFAULT_SETTINGS.heroDescription) || DEFAULT_SETTINGS.heroDescription),
-    footerText: String(raw && raw.footerText || DEFAULT_SETTINGS.footerText),
-    theme: ["dark", "light", "auto"].includes(raw && raw.theme) ? raw.theme : DEFAULT_SETTINGS.theme,
-    language: ["en", "ar"].includes(raw && raw.language) ? raw.language : DEFAULT_SETTINGS.language
+    appTitle: String(raw.appTitle || DEFAULT_SETTINGS.appTitle),
+    subtitle: String(raw.subtitle || DEFAULT_SETTINGS.subtitle),
+    logoUrl: String(raw.logoUrl || ""),
+    accentColor: /^#[0-9a-f]{6}$/i.test(String(raw.accentColor || "")) ? raw.accentColor : DEFAULT_SETTINGS.accentColor,
+    heroTitle: String(raw.heroTitle || DEFAULT_SETTINGS.heroTitle),
+    heroDescription: String(raw.heroDescription || DEFAULT_SETTINGS.heroDescription),
+    footerText: String(raw.footerText || DEFAULT_SETTINGS.footerText),
+    theme: ["dark", "light", "auto"].includes(raw.theme) ? raw.theme : DEFAULT_SETTINGS.theme,
+    language: ["en", "ar"].includes(raw.language) ? raw.language : DEFAULT_SETTINGS.language
   };
 }
 
 const settingsKey = STORAGE_KEY + "_settings";
 const itemsKey = STORAGE_KEY + "_manualItems";
+const legacySettingsKey = LEGACY_STORAGE_KEY + "_settings";
+const legacyItemsKey = LEGACY_STORAGE_KEY + "_manualItems";
 
-let settings = sanitizeSettings(loadJson(settingsKey, DEFAULT_SETTINGS));
-const loadedManualItems = loadJson(itemsKey, []);
-let manualItems = Array.isArray(loadedManualItems) ? loadedManualItems : [];
+const legacySettings = loadJson(legacySettingsKey, {});
+const legacyItems = loadJson(legacyItemsKey, []);
+let settings = sanitizeSettings(loadJson(settingsKey, legacySettings));
+let manualItems = normalizeManualItems(loadJson(itemsKey, Array.isArray(legacyItems) ? legacyItems : []));
 let filteredItems = [];
 let lightboxIndex = 0;
+
+function normalizeManualItems(items) {
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter((item) => item && typeof item === "object" && item.image)
+    .map((item) => ({
+      id: String(item.id || "manual-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8)),
+      source: "manual",
+      title: String(item.title || "Untitled image"),
+      category: String(item.category || "Image"),
+      image: String(item.image),
+      alt: String(item.alt || "Gallery image"),
+      link: item.link && item.link !== "#" ? String(item.link) : "#",
+      caption: String(item.caption || ""),
+      hashtags: Array.isArray(item.hashtags) ? item.hashtags.map(String) : [],
+      timestamp: item.timestamp && !Number.isNaN(new Date(item.timestamp).getTime())
+        ? new Date(item.timestamp).toISOString()
+        : new Date().toISOString(),
+      type: "image"
+    }));
+}
 
 const DEMO_ITEMS = [
   { id: "demo-01", source: "demo", title: "Aurora", caption: "Local SVG demo for the main gallery.", image: "demo/aurora.svg", alt: "Abstract aurora gradient artwork", category: "Demo", timestamp: "2026-09-27T20:00:00.000Z", type: "image", link: "demo/aurora.svg" },
@@ -223,9 +248,7 @@ function bindEvents() {
     openModal("settings-modal");
   });
 
-  $("#manage-btn").addEventListener("click", function() {
-    openManage(false);
-  });
+  $("#manage-btn").addEventListener("click", openManage);
 
   $("#add-image-btn").addEventListener("click", function() {
     openManage();
@@ -341,7 +364,7 @@ function translatePage() {
     element.placeholder = t(element.dataset.i18nPlaceholder);
   });
 
-  $("#lightbox-link").textContent = t("openGallery");
+  $("#lightbox-link").textContent = t("openImage");
   renderGallery();
   renderManualList();
 }
@@ -387,14 +410,6 @@ function openManage() {
   clearManualForm();
   renderManualList();
   openModal("manage-modal");
-}
-
-function getGalleryType(url) {
-  const normalized = normalizeGalleryPostUrl(url);
-  if (!normalized) return "image";
-
-  const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
-  return pathParts[0] === "reel" || pathParts[0] === "tv" ? "reel" : "image";
 }
 
 async function handleManualFile(event) {
@@ -448,7 +463,7 @@ function saveManualItem() {
     source: "manual",
     title: titleInput || "Untitled image",
     category: category || "Image",
-    image: image,
+    image: itemImage,
     alt: altInput || "Gallery image",
     link: customLink || "#",
     caption: "",
@@ -511,9 +526,7 @@ function clearManualForm() {
 }
 
 function getCombinedItems() {
-  return DEMO_ITEMS.concat(manualItems.map(function(item) {
-    return Object.assign({}, item, { source: "manual", type: "image" });
-  }));
+  return DEMO_ITEMS.concat(normalizeManualItems(manualItems));
 }
 
 function getDateValue(item) {

@@ -538,10 +538,7 @@ label input[type="color"] { padding: 4px; min-height: 43px; }
   border-radius: 11px;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at 30% 110%, #ffdc80 0 18%, transparent 19%),
-    radial-gradient(circle at 80% 120%, #fcaf45 0 20%, transparent 21%),
-    linear-gradient(135deg, #833ab4, #fd1d1d 52%, #fcb045);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #334155));
   color: #fff;
   font-weight: 900;
   font-size: 1rem;

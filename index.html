@@ -67,9 +67,6 @@
           <select id="type-filter" aria-label="Media type">
             <option value="all" data-i18n="allTypes">All types</option>
             <option value="image" data-i18n="images">Images</option>
-            <option value="video" data-i18n="videos">Videos</option>
-            <option value="reel" data-i18n="reels">Reels</option>
-            <option value="carousel" data-i18n="carousels">Carousels</option>
           </select>
           <select id="sort-filter" aria-label="Sort">
             <option value="newest" data-i18n="newest">Newest</option>
@@ -110,12 +107,11 @@
       <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="Previous">‹</button>
       <div class="lightbox-media-wrap">
         <img id="lightbox-image" src="" alt="" />
-        <video id="lightbox-video" controls playsinline preload="metadata" hidden></video>
       </div>
       <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Next">›</button>
       <div class="lightbox-info">
         <div class="lightbox-meta" id="lightbox-meta"></div>
-        <h2 id="lightbox-title">Post</h2>
+        <h2 id="lightbox-title">Image</h2>
         <p id="lightbox-caption"></p>
         <a id="lightbox-link" class="primary-btn inline-btn" href="#" target="_blank" rel="noopener noreferrer">Open Image</a>
       </div>

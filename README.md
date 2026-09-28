@@ -1,12 +1,12 @@
-# Instagram Image Gallery
+# Image Gallery
 
-Frontend-only Instagram Image Gallery for **@pavley_mousa**.
+Frontend-only image gallery for **@pavley_mousa**.
 
 ## Workflow
 
 This is a manual gallery. There is no Instagram feed, no automatic synchronization, no backend, and no database.
 
-Add each Instagram post individually from its post URL. The gallery saves manually added entries in the browser with localStorage.
+Add images individually by URL or local upload. The gallery saves manually added entries in the browser with localStorage.
 
 ## Demo content
 
@@ -14,19 +14,16 @@ The repository includes 8 locally stored SVG demo images inside the /demo folder
 
 Demo images are local files, so the gallery does not need an external image service for the demo section.
 
-## Add posts and images
+## Add images
 
 Open **Manage Gallery** and either:
 
-- paste an individual Instagram post URL
 - add an image URL
 - upload an image from your device
-
-Instagram /p/, /reel/, and /tv/ links are normalized before being saved.
+- optionally attach any external link
 
 ## Features
 
-- Individual Instagram post embeds
 - Local demo SVG assets
 - Image URLs and local image uploads
 - Lightbox and previous/next navigation
@@ -39,10 +36,6 @@ Instagram /p/, /reel/, and /tv/ links are normalized before being saved.
 - Add/edit/delete
 - localStorage
 - No automatic feed updates
-
-## Current Instagram post
-
-https://www.instagram.com/p/DYDoOcBjP4k/
 
 ## Files
 

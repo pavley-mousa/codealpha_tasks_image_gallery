@@ -377,9 +377,7 @@ function openManage() {
   clearManualForm();
   renderManualList();
   openModal("manage-modal");
-
 }
-
 
 function getGalleryType(url) {
   const normalized = normalizeGalleryPostUrl(url);
@@ -504,7 +502,7 @@ function clearManualForm() {
 
 function getCombinedItems() {
   return DEMO_ITEMS.concat(manualItems.map(function(item) {
-    return Object.assign({}, item, { source: "manual", type: "image", embed: "" });
+    return Object.assign({}, item, { source: "manual", type: "image" });
   }));
 }
 
@@ -572,13 +570,6 @@ function renderGallery() {
     sourceBadge.textContent = item.source === "demo" ? t("demoSource") : t("manualSource");
     topRow.appendChild(sourceBadge);
 
-    if (item.type !== "image") {
-      const typeBadge = document.createElement("span");
-      typeBadge.className = "item-badge";
-      typeBadge.textContent = item.type.toUpperCase();
-      topRow.appendChild(typeBadge);
-    }
-
     const body = document.createElement("div");
     body.className = "item-overlay-body";
 
@@ -597,13 +588,6 @@ function renderGallery() {
       demoBadge.className = "demo-corner-badge";
       demoBadge.textContent = t("demoSource");
       card.appendChild(demoBadge);
-    }
-
-    if (item.type !== "image") {
-      const play = document.createElement("div");
-      play.className = "play-badge";
-      play.textContent = item.type === "carousel" ? "↔" : "▶";
-      card.appendChild(play);
     }
 
     grid.appendChild(card);
@@ -688,21 +672,9 @@ function updateLightbox() {
   if (!item) return;
 
   const image = $("#lightbox-image");
-  const video = $("#lightbox-video");
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-
-  image.hidden = true;
-  video.hidden = true;
-  if (item.type === "video" || item.type === "reel") {
-    video.src = item.video || item.image;
-    video.hidden = !video.src;
-  } else {
-    image.src = item.image || "";
-    image.alt = item.alt || item.title || "";
-    image.hidden = !item.image;
-  }
+  image.hidden = !item.image;
+  image.src = item.image || "";
+  image.alt = item.alt || item.title || "";
 
   $("#lightbox-title").textContent = item.title || "Gallery item";
   $("#lightbox-caption").textContent = item.caption || item.alt || "";
@@ -710,7 +682,6 @@ function updateLightbox() {
   $("#lightbox-meta").textContent = [
     item.source === "demo" ? t("demoSource") :
       t("manualSource"),
-    item.type !== "image" ? item.type.toUpperCase() : "",
     formatDate(item.timestamp)
   ].filter(Boolean).join(" • ");
 

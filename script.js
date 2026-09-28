@@ -163,12 +163,10 @@ function sanitizeSettings(raw) {
 
 const settingsKey = STORAGE_KEY + "_settings";
 const itemsKey = STORAGE_KEY + "_manualItems";
-const legacySettingsKey = LEGACY_STORAGE_KEY + "_settings";
 const legacyItemsKey = LEGACY_STORAGE_KEY + "_manualItems";
 
-const legacySettings = loadJson(legacySettingsKey, {});
 const legacyItems = loadJson(legacyItemsKey, []);
-let settings = sanitizeSettings(loadJson(settingsKey, legacySettings));
+let settings = sanitizeSettings(loadJson(settingsKey, DEFAULT_SETTINGS));
 let manualItems = normalizeManualItems(loadJson(itemsKey, Array.isArray(legacyItems) ? legacyItems : []));
 let filteredItems = [];
 let lightboxIndex = 0;

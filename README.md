@@ -4,7 +4,7 @@ Frontend-only image gallery for **@pavley_mousa**.
 
 ## Workflow
 
-This is a manual gallery. There is no Instagram feed, no automatic synchronization, no backend, and no database.
+This is a manual image gallery with no backend or database.
 
 Add images individually by URL or local upload. The gallery saves manually added entries in the browser with localStorage.
 

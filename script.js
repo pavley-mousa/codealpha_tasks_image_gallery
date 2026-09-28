@@ -1,13 +1,12 @@
 const STORAGE_KEY = "codealpha_image_gallery_v3";
 
 const DEFAULT_SETTINGS = {
-  instagramUsername: "pavley_mousa",
-  appTitle: "Instagram Gallery",
-  subtitle: "A clean gallery for your Instagram posts.",
+  appTitle: "Image Gallery",
+  subtitle: "A clean gallery for your images.",
   logoUrl: "",
   accentColor: "#7c3aed",
-  heroTitle: "Your Instagram Gallery",
-  heroDescription: "Add Instagram posts one by one, preview them here, and keep everything organized.",
+  heroTitle: "Your Image Gallery",
+  heroDescription: "Add images one by one, preview them here, and keep everything organized.",
   footerText: "Frontend Only • Manual Gallery • Local Storage",
   theme: "dark",
   language: "en"
@@ -15,17 +14,11 @@ const DEFAULT_SETTINGS = {
 
 const TRANSLATIONS = {
   en: {
-    instagramProfile: "Instagram Profile",
-    addInstagramPost: "Add Instagram Post",
-    instagramUsername: "Instagram username",
-    instagramProfileSettings: "Instagram Profile",
-    instagramProfileHelp: "Posts are added manually from individual Instagram post URLs. There is no feed and no automatic synchronization.",
     orUpload: "Or upload an image",
     posts: "Items",
     searchLabel: "Search",
     searchPlaceholder: "Search titles, captions and hashtags...",
     allContent: "All content",
-    instagram: "Instagram",
     demo: "Demo",
     manual: "Manual",
     allTypes: "All types",
@@ -35,8 +28,8 @@ const TRANSLATIONS = {
     carousels: "Carousels",
     newest: "Newest",
     oldest: "Oldest",
-    emptyTitle: "No items found",
-    emptyText: "Add an Instagram post or an image from Manage Gallery.",
+    emptyTitle: "No images found",
+    emptyText: "Add an image from Manage Gallery.",
     galleryEyebrow: "GALLERY",
     galleryTitle: "Your collection",
     manageGallery: "Manage Gallery",
@@ -64,32 +57,24 @@ const TRANSLATIONS = {
     imageUrl: "Image URL",
     postLink: "Link",
     imageAlt: "Alt text",
-    instagramPostUrl: "Instagram post URL",
     clear: "Clear",
     addImage: "Add Item",
     manualGalleryEyebrow: "MANUAL CONTENT",
     manualGalleryTitle: "Saved gallery items",
     edit: "Edit",
     delete: "Delete",
-    openInstagram: "Open on Instagram",
+    openInstagram: "Open Image",
     manualSource: "Manual",
-    instagramSource: "Instagram",
     demoSource: "Demo",
     noManual: "No manually added items yet.",
     saveEdit: "Save Changes"
   },
   ar: {
-    instagramProfile: "حساب إنستجرام",
-    addInstagramPost: "إضافة بوست إنستجرام",
-    instagramUsername: "اسم حساب إنستجرام",
-    instagramProfileSettings: "حساب إنستجرام",
-    instagramProfileHelp: "البوستات بتتضاف يدويًا من روابط البوستات نفسها. مفيش Feed ولا مزامنة تلقائية.",
     orUpload: "أو ارفع صورة",
     posts: "عنصر",
     searchLabel: "بحث",
     searchPlaceholder: "ابحث في العناوين والكابشن والهاشتاجات...",
     allContent: "كل المحتوى",
-    instagram: "إنستجرام",
     demo: "تجريبي",
     manual: "يدوي",
     allTypes: "كل الأنواع",
@@ -99,8 +84,8 @@ const TRANSLATIONS = {
     carousels: "كاروسيل",
     newest: "الأحدث",
     oldest: "الأقدم",
-    emptyTitle: "مفيش عناصر",
-    emptyText: "ضيف بوست إنستجرام أو صورة من إدارة المعرض.",
+    emptyTitle: "مفيش صور",
+    emptyText: "ضيف صورة من إدارة المعرض.",
     galleryEyebrow: "المعرض",
     galleryTitle: "مجموعتك",
     manageGallery: "إدارة المعرض",
@@ -128,16 +113,14 @@ const TRANSLATIONS = {
     imageUrl: "رابط الصورة",
     postLink: "الرابط",
     imageAlt: "الوصف البديل",
-    instagramPostUrl: "رابط بوست إنستجرام",
     clear: "مسح",
     addImage: "إضافة عنصر",
     manualGalleryEyebrow: "المحتوى اليدوي",
     manualGalleryTitle: "عناصر الجاليري المحفوظة",
     edit: "تعديل",
     delete: "حذف",
-    openInstagram: "فتح على إنستجرام",
+    openInstagram: "فتح الصورة",
     manualSource: "يدوي",
-    instagramSource: "إنستجرام",
     demoSource: "تجريبي",
     noManual: "مفيش عناصر مضافة يدويًا لسه.",
     saveEdit: "حفظ التعديل"
@@ -163,14 +146,18 @@ function saveJson(key, value) {
 }
 
 function sanitizeSettings(raw) {
+  const oldTitle = raw && raw.appTitle;
+  const oldSubtitle = raw && raw.subtitle;
+  const oldHeroTitle = raw && raw.heroTitle;
+  const oldHeroDescription = raw && raw.heroDescription;
+  const migrate = function(value, oldValue, nextValue) { return value === oldValue ? nextValue : value; };
   return {
-    instagramUsername: String(raw && raw.instagramUsername || DEFAULT_SETTINGS.instagramUsername).replace(/^@+/, ""),
-    appTitle: String(raw && raw.appTitle || DEFAULT_SETTINGS.appTitle),
-    subtitle: String(raw && raw.subtitle || DEFAULT_SETTINGS.subtitle),
+    appTitle: String(migrate(oldTitle, "Instagram Gallery", DEFAULT_SETTINGS.appTitle) || DEFAULT_SETTINGS.appTitle),
+    subtitle: String(migrate(oldSubtitle, "A clean gallery for your Instagram posts.", DEFAULT_SETTINGS.subtitle) || DEFAULT_SETTINGS.subtitle),
     logoUrl: String(raw && raw.logoUrl || ""),
     accentColor: /^#[0-9a-f]{6}$/i.test(raw && raw.accentColor || "") ? raw.accentColor : DEFAULT_SETTINGS.accentColor,
-    heroTitle: String(raw && raw.heroTitle || DEFAULT_SETTINGS.heroTitle),
-    heroDescription: String(raw && raw.heroDescription || DEFAULT_SETTINGS.heroDescription),
+    heroTitle: String(migrate(oldHeroTitle, "Your Instagram Gallery", DEFAULT_SETTINGS.heroTitle) || DEFAULT_SETTINGS.heroTitle),
+    heroDescription: String(migrate(oldHeroDescription, "Add Instagram posts one by one, preview them here, and keep everything organized.", DEFAULT_SETTINGS.heroDescription) || DEFAULT_SETTINGS.heroDescription),
     footerText: String(raw && raw.footerText || DEFAULT_SETTINGS.footerText),
     theme: ["dark", "light", "auto"].includes(raw && raw.theme) ? raw.theme : DEFAULT_SETTINGS.theme,
     language: ["en", "ar"].includes(raw && raw.language) ? raw.language : DEFAULT_SETTINGS.language
@@ -185,23 +172,6 @@ const loadedManualItems = loadJson(itemsKey, []);
 let manualItems = Array.isArray(loadedManualItems) ? loadedManualItems : [];
 let filteredItems = [];
 let lightboxIndex = 0;
-
-const DEFAULT_INSTAGRAM_POSTS = [
-  {
-    id: "instagram-DYDoOcBjP4k",
-    source: "instagram",
-    title: "Instagram post",
-    caption: "",
-    image: "",
-    alt: "@pavley_mousa Instagram post",
-    link: "https://www.instagram.com/p/DYDoOcBjP4k/",
-    embed: "https://www.instagram.com/p/DYDoOcBjP4k/embed/",
-    timestamp: "",
-    type: "image",
-    username: "pavley_mousa",
-    hashtags: []
-  }
-];
 
 const DEMO_ITEMS = [
   { id: "demo-01", source: "demo", title: "Aurora", caption: "Local SVG demo for the main gallery.", image: "demo/aurora.svg", alt: "Abstract aurora gradient artwork", category: "Demo", timestamp: "2026-09-27T20:00:00.000Z", type: "image", link: "demo/aurora.svg" },
@@ -326,15 +296,11 @@ function applySettings() {
 
   $("#app-title").textContent = settings.appTitle;
   $("#app-subtitle").textContent = settings.subtitle;
-  $("#profile-name").textContent = "@" + settings.instagramUsername;
+  $("#profile-name").textContent = settings.language === "ar" ? "مجموعة الصور" : "Image Collection";
   $("#profile-bio").textContent = settings.language === "ar"
-    ? "ضيف بوستات إنستجرام واحد واحد داخل الجاليري."
-    : "Add Instagram posts one by one to your gallery.";
+    ? "ضيف الصور ونظمها وافتحها بحجم كبير."
+    : "Add your images, organize them, and open them full-size.";
 
-  const profileUrl = getProfileUrl();
-  $("#instagram-profile-btn").href = profileUrl;
-  const settingsProfileLink = $("#settings-instagram-link");
-  if (settingsProfileLink) settingsProfileLink.href = profileUrl;
 
   $("#hero-title").textContent = settings.heroTitle;
   $("#hero-description").textContent = settings.heroDescription;
@@ -374,12 +340,7 @@ function translatePage() {
   renderManualList();
 }
 
-function getProfileUrl() {
-  return "https://www.instagram.com/" + encodeURIComponent(settings.instagramUsername) + "/";
-}
-
 function populateSettingsForm() {
-  $("#instagram-username-input").value = settings.instagramUsername;
   $("#app-title-input").value = settings.appTitle;
   $("#app-subtitle-input").value = settings.subtitle;
   $("#logo-url-input").value = settings.logoUrl;
@@ -421,36 +382,9 @@ function openManage(focusInstagram) {
   clearManualForm();
   renderManualList();
   openModal("manage-modal");
-  if (focusInstagram) {
-    setTimeout(function() { $("#manual-instagram-input").focus(); }, 0);
-  }
+
 }
 
-function normalizeInstagramPostUrl(url) {
-  if (!url) return "";
-  try {
-    const parsed = new URL(url);
-    if (!/(^|\.)instagram\.com$/i.test(parsed.hostname)) return "";
-    const match = parsed.pathname.match(/^\/(p|reel|tv)\/([^/]+)/i);
-    return match ? "https://www.instagram.com/" + match[1].toLowerCase() + "/" + match[2] : "";
-  } catch {
-    return "";
-  }
-}
-
-function getInstagramTitle(url) {
-  const normalized = normalizeInstagramPostUrl(url);
-  if (!normalized) return "Instagram post";
-  const token = normalized.split("/").filter(Boolean).pop();
-  return token ? "Instagram • " + token : "Instagram post";
-}
-
-function getInstagramType(url) {
-  const normalized = normalizeInstagramPostUrl(url);
-  if (!normalized) return "image";
-  const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
-  return pathParts[0] === "reel" || pathParts[0] === "tv" ? "reel" : "image";
-}
 
 function getInstagramType(url) {
   const normalized = normalizeInstagramPostUrl(url);
@@ -493,25 +427,13 @@ function saveManualItem() {
   const titleInput = $("#manual-title-input").value.trim();
   const category = $("#manual-category-input").value.trim();
   const image = $("#manual-image-input").value.trim() || $("#manual-file-input").dataset.dataUrl || "";
-  const instagramUrlInput = $("#manual-instagram-input").value.trim();
-  const instagramUrl = normalizeInstagramPostUrl(instagramUrlInput);
   const customLink = $("#manual-link-input").value.trim();
   const altInput = $("#manual-alt-input").value.trim();
   const existingId = $("#manual-id-input").value;
 
-  if (!image && !instagramUrl) {
-    alert(settings.language === "ar"
-      ? "حط رابط بوست إنستجرام أو صورة."
-      : "Add an Instagram post URL or an image.");
-    $("#manual-instagram-input").focus();
-    return;
-  }
-
-  if (instagramUrlInput && !instagramUrl) {
-    alert(settings.language === "ar"
-      ? "رابط إنستجرام غير صالح. استخدم رابط /p/ أو /reel/ أو /tv/."
-      : "Invalid Instagram URL. Use a /p/, /reel/, or /tv/ URL.");
-    $("#manual-instagram-input").focus();
+  if (!image) {
+    alert(settings.language === "ar" ? "حط رابط صورة أو ارفع صورة." : "Add an image URL or upload an image.");
+    $("#manual-image-input").focus();
     return;
   }
 
@@ -521,17 +443,15 @@ function saveManualItem() {
   const item = {
     id: existingId || "manual-" + Date.now(),
     source: "manual",
-    title: titleInput || (instagramUrl ? getInstagramTitle(instagramUrl) : "Untitled image"),
-    category: category || (instagramUrl ? "Instagram" : "Manual"),
+    title: titleInput || "Untitled image",
+    category: category || "Image",
     image: image,
-    alt: altInput || (instagramUrl ? "Instagram post" : "Gallery image"),
-    link: customLink || instagramUrl || "#",
-    instagramUrl: instagramUrl,
-    embed: instagramUrl ? instagramUrl + "/embed/" : "",
+    alt: altInput || "Gallery image",
+    link: customLink || "#",
     caption: "",
     hashtags: [],
     timestamp: previous && previous.timestamp ? previous.timestamp : new Date().toISOString(),
-    type: instagramUrl ? getInstagramType(instagramUrl) : "image"
+    type: "image"
   };
 
   const existingIndex = manualItems.findIndex(function(entry) { return entry.id === item.id; });
@@ -555,7 +475,6 @@ function editManualItem(id) {
   $("#manual-file-input").value = "";
   delete $("#manual-file-input").dataset.dataUrl;
   $("#manual-link-input").value = item.link || "";
-  $("#manual-instagram-input").value = item.instagramUrl || "";
   $("#manual-alt-input").value = item.alt || "";
   $("#save-manual-btn").textContent = t("saveEdit");
   $("#manual-title-input").focus();
@@ -582,7 +501,6 @@ function clearManualForm() {
   $("#manual-category-input").value = "";
   $("#manual-image-input").value = "";
   $("#manual-link-input").value = "";
-  $("#manual-instagram-input").value = "";
   $("#manual-alt-input").value = "";
   $("#manual-file-input").value = "";
   delete $("#manual-file-input").dataset.dataUrl;
@@ -590,8 +508,8 @@ function clearManualForm() {
 }
 
 function getCombinedItems() {
-  return DEFAULT_INSTAGRAM_POSTS.concat(DEMO_ITEMS, manualItems.map(function(item) {
-    return Object.assign({}, item, { source: "manual", type: item.type || "image" });
+  return DEMO_ITEMS.concat(manualItems.map(function(item) {
+    return Object.assign({}, item, { source: "manual", type: "image", embed: "" });
   }));
 }
 
@@ -672,11 +590,7 @@ function renderGallery() {
 
     const sourceBadge = document.createElement("span");
     sourceBadge.className = "item-badge";
-    sourceBadge.textContent = item.source === "instagram"
-      ? t("instagramSource")
-      : item.source === "demo"
-        ? t("demoSource")
-        : t("manualSource");
+    sourceBadge.textContent = item.source === "demo" ? t("demoSource") : t("manualSource");
     topRow.appendChild(sourceBadge);
 
     if (item.type !== "image") {
@@ -693,11 +607,7 @@ function renderGallery() {
     title.textContent = item.title || "Gallery item";
 
     const meta = document.createElement("p");
-    meta.textContent = formatRelativeDate(item.timestamp) || (
-      item.source === "instagram" ? t("instagramSource") :
-      item.source === "demo" ? t("demoSource") :
-      t("manualSource")
-    );
+    meta.textContent = formatRelativeDate(item.timestamp) || (item.source === "demo" ? t("demoSource") : t("manualSource"));
 
     body.append(title, meta);
     overlay.append(topRow, body);
@@ -764,9 +674,7 @@ function renderManualList() {
     title.textContent = item.title || "Untitled";
 
     const meta = document.createElement("span");
-    meta.textContent = item.instagramUrl
-      ? t("instagramSource") + " • " + item.instagramUrl
-      : item.category || t("manualSource");
+    meta.textContent = item.category || t("manualSource");
 
     info.append(title, meta);
 
@@ -802,21 +710,13 @@ function updateLightbox() {
 
   const image = $("#lightbox-image");
   const video = $("#lightbox-video");
-  const embed = $("#lightbox-embed");
-
   video.pause();
   video.removeAttribute("src");
   video.load();
 
   image.hidden = true;
   video.hidden = true;
-  embed.hidden = true;
-  embed.removeAttribute("src");
-
-  if (item.embed) {
-    embed.src = item.embed;
-    embed.hidden = false;
-  } else if (item.type === "video" || item.type === "reel") {
+  if (item.type === "video" || item.type === "reel") {
     video.src = item.video || item.image;
     video.hidden = !video.src;
   } else {
@@ -839,9 +739,7 @@ function updateLightbox() {
   const link = $("#lightbox-link");
   const hasExternalLink = item.link && item.link !== "#";
   link.href = hasExternalLink ? item.link : "#";
-  link.textContent = item.source === "instagram" || item.instagramUrl
-    ? t("openInstagram")
-    : (settings.language === "ar" ? "فتح العنصر" : "Open item");
+  link.textContent = t("openInstagram");
   link.style.display = hasExternalLink ? "inline-flex" : "none";
 }
 

@@ -1,4 +1,4 @@
-const STORAGE_KEY = "codealpha_image_gallery_v4";
+const STORAGE_KEY = "codealpha_image_gallery_v3";
 
 const DEFAULT_SETTINGS = {
   appTitle: "Image Gallery",
@@ -146,11 +146,7 @@ function saveJson(key, value) {
 }
 
 function sanitizeSettings(raw) {
-  const oldTitle = raw && raw.appTitle;
-  const oldSubtitle = raw && raw.subtitle;
-  const oldHeroTitle = raw && raw.heroTitle;
-  const oldHeroDescription = raw && raw.heroDescription;
-  const migrate = function(value, oldValue, nextValue) { return value === oldValue ? nextValue : value; };
+
   return {
     appTitle: String(migrate(oldTitle, "Gallery", DEFAULT_SETTINGS.appTitle) || DEFAULT_SETTINGS.appTitle),
     subtitle: String(migrate(oldSubtitle, "A clean gallery for your Gallery images.", DEFAULT_SETTINGS.subtitle) || DEFAULT_SETTINGS.subtitle),
@@ -555,31 +551,15 @@ function renderGallery() {
     card.setAttribute("role", "button");
     card.setAttribute("aria-label", item.title || "Gallery item");
 
-    if (item.embed) {
-      const embedWrap = document.createElement("div");
-      embedWrap.className = "instagram-embed-preview";
-
-      const frame = document.createElement("iframe");
-      frame.src = item.embed;
-      frame.title = item.title || "Gallery image";
-      frame.loading = "lazy";
-      frame.setAttribute("allowtransparency", "true");
-      frame.setAttribute("scrolling", "no");
-      frame.setAttribute("frameborder", "0");
-
-      embedWrap.appendChild(frame);
-      card.appendChild(embedWrap);
-    } else {
-      const image = document.createElement("img");
-      image.loading = "lazy";
-      image.src = item.image;
-      image.alt = item.alt || item.title || "";
-      image.onerror = function() {
-        card.classList.add("image-error");
-        image.removeAttribute("src");
-      };
-      card.appendChild(image);
-    }
+    const image = document.createElement("img");
+    image.loading = "lazy";
+    image.src = item.image || "";
+    image.alt = item.alt || item.title || "";
+    image.onerror = function() {
+      card.classList.add("image-error");
+      image.removeAttribute("src");
+    };
+    card.appendChild(image);
 
     const overlay = document.createElement("div");
     overlay.className = "item-overlay";

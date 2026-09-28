@@ -1,6 +1,6 @@
 # Image Gallery
 
-Frontend-only image gallery for **@pavley_mousa**.
+Frontend-only image gallery.
 
 ## Workflow
 
@@ -10,9 +10,9 @@ Add images individually by URL or local upload. The gallery saves manually added
 
 ## Demo content
 
-The repository includes 8 locally stored SVG demo images inside the /demo folder. They are intentionally fictional test assets used to verify the grid, search, filters, lightbox, themes, responsive layout, and loading behavior.
+The repository includes 18 locally stored SVG demo images inside the `/demo` folder. They are fictional test assets used to verify the grid, search, filters, lightbox, themes, responsive layout, and image loading.
 
-Demo images are local files, so the gallery does not need an external image service for the demo section.
+All demo images are local files, so the demo gallery does not depend on an external image service.
 
 ## Add images
 
@@ -20,14 +20,14 @@ Open **Manage Gallery** and either:
 
 - add an image URL
 - upload an image from your device
-- optionally attach any external link
+- optionally attach an external link
 
 ## Features
 
-- Local demo SVG assets
+- 18 built-in local demo images
 - Image URLs and local image uploads
-- Lightbox and previous/next navigation
-- Keyboard navigation for gallery cards and lightbox
+- Lightbox with previous/next navigation
+- Keyboard navigation
 - Search and filters
 - Newest/oldest sorting
 - Arabic/English UI
@@ -35,11 +35,11 @@ Open **Manage Gallery** and either:
 - Custom branding
 - Add/edit/delete
 - localStorage
-- No automatic feed updates
+- No backend or database
 
 ## Files
 
-- index.html — UI
-- style.css — styling
-- script.js — gallery logic and local storage
-- demo/ — fictional local SVG demo assets
+- `index.html` — UI
+- `style.css` — styling
+- `script.js` — gallery logic and local storage
+- `demo/` — fictional local SVG demo images

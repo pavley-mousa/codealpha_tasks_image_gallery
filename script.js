@@ -1,4 +1,4 @@
-const STORAGE_KEY = "codealpha_image_gallery_v3";
+const STORAGE_KEY = "codealpha_image_gallery_v4";
 
 const DEFAULT_SETTINGS = {
   appTitle: "Image Gallery",
@@ -47,7 +47,7 @@ const TRANSLATIONS = {
     theme: "Theme",
     language: "Language",
     frontendOnlyTitle: "Frontend Only",
-    frontendOnlyText: "Settings and gallery content are saved in this browser with localStorage. No backend, database, Instagram feed, or automatic sync is used.",
+    frontendOnlyText: "Settings and gallery content are saved in this browser with localStorage. No backend, database, image feed, or automatic sync is used.",
     reset: "Reset Defaults",
     cancel: "Cancel",
     save: "Save Settings",
@@ -63,7 +63,7 @@ const TRANSLATIONS = {
     manualGalleryTitle: "Saved gallery items",
     edit: "Edit",
     delete: "Delete",
-    openInstagram: "Open Image",
+    openImage: "Open Image",
     manualSource: "Manual",
     demoSource: "Demo",
     noManual: "No manually added items yet.",
@@ -103,7 +103,7 @@ const TRANSLATIONS = {
     theme: "الثيم",
     language: "اللغة",
     frontendOnlyTitle: "Frontend Only",
-    frontendOnlyText: "الإعدادات ومحتوى الجاليري بيتخزنوا في المتصفح باستخدام localStorage. مفيش Backend ولا Database ولا Instagram Feed ولا مزامنة تلقائية.",
+    frontendOnlyText: "الإعدادات ومحتوى الجاليري بيتخزنوا في المتصفح باستخدام localStorage. مفيش Backend ولا Database ولا Image Feed ولا مزامنة تلقائية.",
     reset: "إرجاع الافتراضي",
     cancel: "إلغاء",
     save: "حفظ الإعدادات",
@@ -119,7 +119,7 @@ const TRANSLATIONS = {
     manualGalleryTitle: "عناصر الجاليري المحفوظة",
     edit: "تعديل",
     delete: "حذف",
-    openInstagram: "فتح الصورة",
+    openImage: "فتح الصورة",
     manualSource: "يدوي",
     demoSource: "تجريبي",
     noManual: "مفيش عناصر مضافة يدويًا لسه.",
@@ -152,12 +152,12 @@ function sanitizeSettings(raw) {
   const oldHeroDescription = raw && raw.heroDescription;
   const migrate = function(value, oldValue, nextValue) { return value === oldValue ? nextValue : value; };
   return {
-    appTitle: String(migrate(oldTitle, "Instagram Gallery", DEFAULT_SETTINGS.appTitle) || DEFAULT_SETTINGS.appTitle),
-    subtitle: String(migrate(oldSubtitle, "A clean gallery for your Instagram posts.", DEFAULT_SETTINGS.subtitle) || DEFAULT_SETTINGS.subtitle),
+    appTitle: String(migrate(oldTitle, "Gallery", DEFAULT_SETTINGS.appTitle) || DEFAULT_SETTINGS.appTitle),
+    subtitle: String(migrate(oldSubtitle, "A clean gallery for your Gallery images.", DEFAULT_SETTINGS.subtitle) || DEFAULT_SETTINGS.subtitle),
     logoUrl: String(raw && raw.logoUrl || ""),
     accentColor: /^#[0-9a-f]{6}$/i.test(raw && raw.accentColor || "") ? raw.accentColor : DEFAULT_SETTINGS.accentColor,
-    heroTitle: String(migrate(oldHeroTitle, "Your Instagram Gallery", DEFAULT_SETTINGS.heroTitle) || DEFAULT_SETTINGS.heroTitle),
-    heroDescription: String(migrate(oldHeroDescription, "Add Instagram posts one by one, preview them here, and keep everything organized.", DEFAULT_SETTINGS.heroDescription) || DEFAULT_SETTINGS.heroDescription),
+    heroTitle: String(migrate(oldHeroTitle, "Your Image Gallery", DEFAULT_SETTINGS.heroTitle) || DEFAULT_SETTINGS.heroTitle),
+    heroDescription: String(migrate(oldHeroDescription, "Add Gallery images one by one, preview them here, and keep everything organized.", DEFAULT_SETTINGS.heroDescription) || DEFAULT_SETTINGS.heroDescription),
     footerText: String(raw && raw.footerText || DEFAULT_SETTINGS.footerText),
     theme: ["dark", "light", "auto"].includes(raw && raw.theme) ? raw.theme : DEFAULT_SETTINGS.theme,
     language: ["en", "ar"].includes(raw && raw.language) ? raw.language : DEFAULT_SETTINGS.language
@@ -221,8 +221,8 @@ function bindEvents() {
     openManage(false);
   });
 
-  $("#add-instagram-post-btn").addEventListener("click", function() {
-    openManage(true);
+  $("#add-image-btn").addEventListener("click", function() {
+    openManage();
   });
 
   $("#search-input").addEventListener("input", renderGallery);
@@ -317,10 +317,10 @@ function applySettings() {
     const img = document.createElement("img");
     img.src = settings.logoUrl;
     img.alt = "";
-    img.onerror = function() { logo.textContent = "IG"; };
+    img.onerror = function() { logo.textContent = "IMG"; };
     logo.appendChild(img);
   } else {
-    logo.textContent = "IG";
+    logo.textContent = "IMG";
   }
 
   translatePage();
@@ -335,7 +335,7 @@ function translatePage() {
     element.placeholder = t(element.dataset.i18nPlaceholder);
   });
 
-  $("#lightbox-link").textContent = t("openInstagram");
+  $("#lightbox-link").textContent = t("openGallery");
   renderGallery();
   renderManualList();
 }
@@ -354,7 +354,6 @@ function populateSettingsForm() {
 
 function saveSettingsFromForm() {
   settings = sanitizeSettings({
-    instagramUsername: $("#instagram-username-input").value.trim(),
     appTitle: $("#app-title-input").value.trim(),
     subtitle: $("#app-subtitle-input").value.trim(),
     logoUrl: $("#logo-url-input").value.trim(),
@@ -378,7 +377,7 @@ function resetSettings() {
   populateSettingsForm();
 }
 
-function openManage(focusInstagram) {
+function openManage() {
   clearManualForm();
   renderManualList();
   openModal("manage-modal");
@@ -386,8 +385,8 @@ function openManage(focusInstagram) {
 }
 
 
-function getInstagramType(url) {
-  const normalized = normalizeInstagramPostUrl(url);
+function getGalleryType(url) {
+  const normalized = normalizeGalleryPostUrl(url);
   if (!normalized) return "image";
 
   const pathParts = new URL(normalized).pathname.split("/").filter(Boolean);
@@ -562,7 +561,7 @@ function renderGallery() {
 
       const frame = document.createElement("iframe");
       frame.src = item.embed;
-      frame.title = item.title || "Instagram post";
+      frame.title = item.title || "Gallery image";
       frame.loading = "lazy";
       frame.setAttribute("allowtransparency", "true");
       frame.setAttribute("scrolling", "no");
@@ -661,9 +660,9 @@ function renderManualList() {
       row.appendChild(image);
     } else {
       const preview = document.createElement("div");
-      preview.className = "manual-preview-instagram";
-      preview.textContent = "IG";
-      preview.setAttribute("aria-label", "Instagram post");
+      preview.className = "manual-preview-placeholder";
+      preview.textContent = "IMG";
+      preview.setAttribute("aria-label", "Image placeholder");
       row.appendChild(preview);
     }
 
@@ -729,8 +728,7 @@ function updateLightbox() {
   $("#lightbox-caption").textContent = item.caption || item.alt || "";
 
   $("#lightbox-meta").textContent = [
-    item.source === "instagram" ? t("instagramSource") :
-      item.source === "demo" ? t("demoSource") :
+    item.source === "demo" ? t("demoSource") :
       t("manualSource"),
     item.type !== "image" ? item.type.toUpperCase() : "",
     formatDate(item.timestamp)
@@ -739,7 +737,7 @@ function updateLightbox() {
   const link = $("#lightbox-link");
   const hasExternalLink = item.link && item.link !== "#";
   link.href = hasExternalLink ? item.link : "#";
-  link.textContent = t("openInstagram");
+  link.textContent = t("openImage");
   link.style.display = hasExternalLink ? "inline-flex" : "none";
 }
 

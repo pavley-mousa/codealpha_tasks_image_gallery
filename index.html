@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#7c3aed" />
-  <meta name="description" content="A customizable frontend-only Instagram image gallery." />
-  <title>Instagram Gallery</title>
+  <meta name="description" content="A customizable frontend-only image gallery." />
+  <title>Image Gallery</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="site-header">
       <div class="brand-area">
-        <div class="brand-logo" id="brand-logo" aria-hidden="true">IG</div>
+        <div class="brand-logo" id="brand-logo" aria-hidden="true">IMG</div>
         <div>
-          <h1 id="app-title">Instagram Gallery</h1>
-          <p id="app-subtitle">Your latest Instagram posts, displayed automatically.</p>
+          <h1 id="app-title">Image Gallery</h1>
+          <p id="app-subtitle">Your images, displayed cleanly and simply.</p>
         </div>
       </div>
 
@@ -31,13 +31,10 @@
         <div class="profile-main">
           <div class="profile-avatar" id="profile-avatar">IG</div>
           <div>
-            <div class="eyebrow" id="live-label">INSTAGRAM GALLERY</div>
-            <h2 id="profile-name">@pavley_mousa</h2>
-            <p id="profile-bio">Add Instagram posts one by one to your gallery.</p>
+            <div class="eyebrow" id="live-label">IMAGE GALLERY</div>
+            <h2 id="profile-name">Image Collection</h2>
+            <p id="profile-bio">Add and organize your images one by one.</p>
           </div>
-        </div>
-        <div class="profile-actions">
-          <a class="secondary-btn profile-link" id="instagram-profile-btn" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Instagram Profile</a>
         </div>
         <div class="profile-stats" id="profile-stats">
           <span><strong id="posts-count">0</strong><small data-i18n="posts">Items</small></span>
@@ -47,12 +44,12 @@
       <section class="hero card">
         <div>
           <span class="badge" id="sync-badge">MANUAL GALLERY</span>
-          <h2 id="hero-title">Latest Instagram posts</h2>
-          <p id="hero-description">Add Instagram posts one by one and keep your gallery under your control.</p>
+          <h2 id="hero-title">Your Image Gallery</h2>
+          <p id="hero-description">Add images, keep them organized, and open them in a clean full-screen viewer.</p>
         </div>
         <button class="primary-btn" id="add-instagram-post-btn" type="button">
           <span>＋</span>
-          <span data-i18n="addInstagramPost">Add Instagram Post</span>
+          <span data-i18n="addImage">Add Image</span>
         </button>
       </section>
 
@@ -64,7 +61,6 @@
         <div class="toolbar-controls">
           <select id="source-filter" aria-label="Source">
             <option value="all" data-i18n="allContent">All content</option>
-            <option value="instagram" data-i18n="instagram">Instagram</option>
             <option value="demo" data-i18n="demo">Demo</option>
             <option value="manual" data-i18n="manual">Manual</option>
           </select>
@@ -84,8 +80,8 @@
 
       <section class="status-area" aria-live="polite">
         <div id="empty-state" class="empty-state hidden">
-          <strong data-i18n="emptyTitle">No posts found</strong>
-          <p data-i18n="emptyText">Add Instagram posts or images from Manage Gallery.</p>
+          <strong data-i18n="emptyTitle">No images found</strong>
+          <p data-i18n="emptyText">Add images from Manage Gallery.</p>
         </div>
       </section>
 
@@ -115,14 +111,13 @@
       <div class="lightbox-media-wrap">
         <img id="lightbox-image" src="" alt="" />
         <video id="lightbox-video" controls playsinline preload="metadata" hidden></video>
-        <iframe id="lightbox-embed" title="Instagram post" hidden loading="eager" allowtransparency="true" scrolling="no" frameborder="0"></iframe>
       </div>
       <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Next">›</button>
       <div class="lightbox-info">
         <div class="lightbox-meta" id="lightbox-meta"></div>
         <h2 id="lightbox-title">Post</h2>
         <p id="lightbox-caption"></p>
-        <a id="lightbox-link" class="primary-btn inline-btn" href="#" target="_blank" rel="noopener noreferrer">Open on Instagram</a>
+        <a id="lightbox-link" class="primary-btn inline-btn" href="#" target="_blank" rel="noopener noreferrer">Open Image</a>
       </div>
     </div>
   </div>
@@ -139,17 +134,7 @@
       </div>
 
       <div class="settings-grid">
-        <section class="settings-section">
-          <h3 data-i18n="instagramProfileSettings">Instagram Profile</h3>
-          <p class="muted" data-i18n="instagramProfileHelp">Posts are added to this gallery manually, one Instagram post at a time. No feed or automatic synchronization is used.</p>
-          <label>
-            <span data-i18n="instagramUsername">Instagram username</span>
-            <input id="instagram-username-input" type="text" maxlength="60" placeholder="@pavley_mousa" />
-          </label>
-          <a class="help-link" id="settings-instagram-link" href="https://www.instagram.com/pavley_mousa/" target="_blank" rel="noopener noreferrer" data-i18n="instagramProfile">Open Instagram Profile ↗</a>
-        </section>
-
-        <section class="settings-section">
+                <section class="settings-section">
           <h3 data-i18n="identity">App Identity</h3>
           <label>
             <span data-i18n="appName">App name</span>
@@ -252,11 +237,9 @@
           </label>
           <label class="full">
             <span data-i18n="postLink">Link</span>
-            <input id="manual-link-input" type="url" placeholder="https://instagram.com/..." />
+            <input id="manual-link-input" type="url" placeholder="https://..." />
           </label>
           <label class="full">
-            <span data-i18n="instagramPostUrl">Instagram post URL (optional)</span>
-            <input id="manual-instagram-input" type="url" placeholder="https://www.instagram.com/p/..." />
           </label>
           <label class="full">
             <span data-i18n="imageAlt">Alt text</span>
